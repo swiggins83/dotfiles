@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/uportal/.gm-player'
+let g:netrw_dirhist_2='/home/uportal/.zsh'
+let g:netrw_dirhist_3='/home/uportal/uPortal/uPortal/uportal-war/src/main/resources/org/jasig/portal/groups'
+let g:netrw_dirhist_4='/home/uportal/Dropbox/development/lua/firstlove'
+let g:netrw_dirhist_5='/home/uportal/.zsh'
+let g:netrw_dirhist_6='/home/uportal/.vim/after'
