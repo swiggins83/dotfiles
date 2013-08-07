@@ -72,6 +72,8 @@ alias :q="exit"
 
 alias dropbox="~/.dropbox-dist/dropboxd start"
 
+alias rainbowize="~/extras/Python/rainbowize"
+
 cd() {
 	builtin cd "$@";
 	ls;
@@ -86,7 +88,7 @@ export ANT_HOME=/home/uportal/uPortal/ant
 export PATH=$ANT_HOME/bin:$PATH
 export TOMCAT_HOME=/home/uportal/uPortal/tomcat
 export PATH=$TOMCAT_HOME:$PATH
-export JAVA_OPTS="-server -XX:MaxPermSize=512m -Xms1024m -Xmx2048m"
+export JAVA_OPTS="-server -XX:MaxPermSize=512m -Xms1024m -Xmx1024m"
 export GROOVY_HOME=/home/uportal/uPortal/groovy
 export PATH=$GROOVY_HOME/bin:$PATH
 
@@ -94,9 +96,16 @@ export ANDROID_HOME=/home/uportal/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 
+export GOPATH=/home/uportal/Dropbox/development/go/game
+export GOROOT=/opt/go
+export PATH=$GOROOT/bin:$PATH
+
+export UPORTAL_HOME=/home/uportal/uPortal/uPortal
+export U=/home/uportal/uPortal/uPortal
+
 export EDITOR=/usr/bin/vim
 
-fpath=(/home/uportal/extras/zsh-completions/src/ $fpath)
+fpath=(/home/uportal/extras/zsh-completions/src/$fpath)
 source /home/uportal/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/uportal/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
 source /home/uportal/extras/zsh-git-prompt/zshrc.sh
@@ -116,4 +125,22 @@ function put {
 		cp -Rdp "$src" .
 	done < ~/.clipboard
 	rm ~/.clipboard
+}
+
+
+# Usage: build [(portlet)|uportal]
+function build {
+	cwd=$(pwd)
+	/etc/init.d/uportal stop &&
+	builtin cd $UPORTAL_HOME
+	for arg in "$@"; do  
+		if [[ $arg == "uportal" ]]; then
+			echo "building uportal"
+			groovy -Dbuild.portlets.skip=true build.groovy
+		else
+			groovy -Dbuild.target.portlet=$arg build.groovy    
+		fi  
+	done
+	/etc/init.d/uportal start
+	builtin cd $cwd
 }
