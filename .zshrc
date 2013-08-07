@@ -66,8 +66,6 @@ alias uportal="cd /home/uportal/uPortal/uPortal"
 alias portportal="/home/uportal/scripts/portportal.sh"
 alias initportal="/home/uportal/scripts/initportal.sh"
 
-alias devssh="ssh scwiggin@mysail01.dev.oakland.edu"
-
 alias :q="exit"
 
 alias dropbox="~/.dropbox-dist/dropboxd start"
