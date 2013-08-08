@@ -1,4 +1,4 @@
 dotfiles
 ========
 
-vim, zsh and awesome setup
+vim, zsh, xterm and awesome setups
