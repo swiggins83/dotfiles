@@ -62,10 +62,6 @@ alias egrep="egrep --color=auto"
 alias asd="cd .."
 alias vi="vim"
 
-alias uportal="cd /home/uportal/uPortal/uPortal"
-alias portportal="/home/uportal/scripts/portportal.sh"
-alias initportal="/home/uportal/scripts/initportal.sh"
-
 alias :q="exit"
 
 alias dropbox="~/.dropbox-dist/dropboxd start"
@@ -75,38 +71,39 @@ alias rainbowize="~/extras/Python/rainbowize"
 cd() {
 	builtin cd "$@";
 	ls;
+
+	print -Pn "\e]2;%~\a"
 }
 
-export M2_HOME=/home/uportal/uPortal/maven
+export M2_HOME=/opt/maven
 export M2=$M2_HOME/bin
 export PATH=$M2:$PATH
-export JAVA_HOME=/usr/lib/jvm/default-java
+export JAVA_HOME=/opt/jdk1.7.0_25
 export PATH=$JAVA_HOME/bin:$PATH
-export ANT_HOME=/home/uportal/uPortal/ant
+export ANT_HOME=/opt/ant
 export PATH=$ANT_HOME/bin:$PATH
-export TOMCAT_HOME=/home/uportal/uPortal/tomcat
+export TOMCAT_HOME=/opt/tomcat
 export PATH=$TOMCAT_HOME:$PATH
 export JAVA_OPTS="-server -XX:MaxPermSize=512m -Xms1024m -Xmx1024m"
-export GROOVY_HOME=/home/uportal/uPortal/groovy
-export PATH=$GROOVY_HOME/bin:$PATH
 
-export ANDROID_HOME=/home/uportal/android/sdk
+export ANDROID_HOME=/home/steven/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 
-export GOPATH=/home/uportal/Dropbox/development/go/game
+#export GOPATH=/home/steven/Dropbox/development/go/game
 export GOROOT=/opt/go
 export PATH=$GOROOT/bin:$PATH
 
-export UPORTAL_HOME=/home/uportal/uPortal/uPortal
-export U=/home/uportal/uPortal/uPortal
+export UPORTAL_HOME=/home/steven/uPortal/uPortal
+export U=/home/steven/uPortal/uPortal
 
 export EDITOR=/usr/bin/vim
 
-fpath=(/home/uportal/extras/zsh-completions/src/$fpath)
-source /home/uportal/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/uportal/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
-source /home/uportal/extras/zsh-git-prompt/zshrc.sh
+fpath=(/home/steven/extras/zsh-completions/src/$fpath)
+source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+source /home/steven/extras/zsh-git-prompt/zshrc.sh
 
 
 function yank {
@@ -123,22 +120,4 @@ function put {
 		cp -Rdp "$src" .
 	done < ~/.clipboard
 	rm ~/.clipboard
-}
-
-
-# Usage: build [(portlet)|uportal]
-function build {
-	cwd=$(pwd)
-	/etc/init.d/uportal stop &&
-	builtin cd $UPORTAL_HOME
-	for arg in "$@"; do  
-		if [[ $arg == "uportal" ]]; then
-			echo "building uportal"
-			groovy -Dbuild.portlets.skip=true build.groovy
-		else
-			groovy -Dbuild.target.portlet=$arg build.groovy    
-		fi  
-	done
-	/etc/init.d/uportal start
-	builtin cd $cwd
 }
