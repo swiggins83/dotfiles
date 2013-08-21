@@ -64,9 +64,17 @@ alias vi="vim"
 
 alias :q="exit"
 
-alias dropbox="~/.dropbox-dist/dropboxd start"
+alias lockandsync="~/scripts/lockandsync.sh"
 
 alias rainbowize="~/extras/Python/rainbowize"
+
+alias uportal="cd ~/uportal/uPortal/"
+alias initportal="~/scripts/initportal.sh"
+alias portportal="~/scripts/portportal.sh"
+
+alias mobilebuild="~/scripts/buildumobile.sh"
+
+alias devssh="ssh scwiggin@mysail01.dev.oakland.edu"
 
 cd() {
 	builtin cd "$@";
@@ -75,16 +83,18 @@ cd() {
 	print -Pn "\e]2;%~\a"
 }
 
-export M2_HOME=/opt/maven
+export M2_HOME=/home/steven/uportal/maven
 export M2=$M2_HOME/bin
 export PATH=$M2:$PATH
-export JAVA_HOME=/opt/jdk1.7.0_25
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
 export PATH=$JAVA_HOME/bin:$PATH
-export ANT_HOME=/opt/ant
+export ANT_HOME=/home/steven/uportal/ant
 export PATH=$ANT_HOME/bin:$PATH
-export TOMCAT_HOME=/opt/tomcat
+export TOMCAT_HOME=/home/steven/uportal/tomcat
 export PATH=$TOMCAT_HOME:$PATH
 export JAVA_OPTS="-server -XX:MaxPermSize=512m -Xms1024m -Xmx1024m"
+export GROOVY_HOME=/home/steven/uportal/groovy
+export PATH=$GROOVY_HOME/bin:$PATH
 
 export ANDROID_HOME=/home/steven/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
@@ -94,8 +104,11 @@ export PATH=$ANDROID_HOME/platform-tools:$PATH
 export GOROOT=/opt/go
 export PATH=$GOROOT/bin:$PATH
 
-export UPORTAL_HOME=/home/steven/uPortal/uPortal
-export U=/home/steven/uPortal/uPortal
+export NODE_HOME=/opt/node
+export PATH=$NODE_HOME/bin:$PATH
+
+export UPORTAL_HOME=/home/steven/uportal/uPortal
+export U=/home/steven/uportal/uPortal
 
 export EDITOR=/usr/bin/vim
 
@@ -104,6 +117,12 @@ source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 source /home/steven/extras/zsh-git-prompt/zshrc.sh
+
+if [ -e /usr/share/terminfo/x/xterm-256color ]; then
+        export TERM='xterm-256color'
+else
+        export TERM='xterm-color'
+fi
 
 
 function yank {
