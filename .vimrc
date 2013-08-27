@@ -20,6 +20,10 @@ colorscheme monokai
 "Return you to last place in file"
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
+"Easy motion"
+let mapleader=","
+let g:EasyMotion_leader_key = '<Leader>'
+
 "For nerdtree"
 autocmd vimenter * NERDTree
 let g:nerdtree_tabs_open_on_console_startup=1
@@ -69,5 +73,6 @@ if exists("+showtabline")
     set tabline=%!MyTabLine()
 endif
 "Not for nerd tree"
+
 
 execute pathogen#infect()
