@@ -10,27 +10,48 @@ set tabstop=4
 set undofile
 set undodir=/home/steven/.vimundo/
 
+"mappings
 inoremap jj <ESC>
+inoremap kk <ESC>
 inoremap {{ {<CR>}<ESC>O
 
-set t_Co=256
+"custom commands
+command Phonebuild execute "!./buildme.sh android %"
+command Webbuild execute "!./buildme.sh web %"
+map <F5> :w <ESC>:Phonebuild<CR><Space>
+map <F6> :w <ESC>:Webbuild<CR><Space>
 
+"for golang
+autocmd FileType go set expandtab!
+filetype off 
+filetype plugin indent off 
+set runtimepath+=$GOROOT/misc/vim
+filetype plugin indent on
+syntax on
+set runtimepath+=$GOPATH/src/github.com/golang/lint/misc/vim
+"autolint go
+autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
+"not for golang
+
+"colors
+set t_Co=256
 colorscheme monokai
 
-"Return you to last place in file"
+"return you to last place in file
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
-"Easy motion"
+"easy motion
 let mapleader=","
 let g:EasyMotion_leader_key = '<Leader>'
 
-"For nerdtree"
+
+"for nerdtree
 autocmd vimenter * NERDTree
 let g:nerdtree_tabs_open_on_console_startup=1
 
 autocmd vimenter * wincmd l 
 
-"Rename tabs to show tab# and # of viewports
+"rename tabs to show tab# and # of viewports
 if exists("+showtabline")
     function! MyTabLine()
         let s = ''
@@ -72,7 +93,6 @@ if exists("+showtabline")
     set stal=2
     set tabline=%!MyTabLine()
 endif
-"Not for nerd tree"
-
+"not for nerd tree
 
 execute pathogen#infect()
