@@ -54,13 +54,18 @@ SAVEHIST=10000
 unsetopt beep
 bindkey -v
 
+zmodload zsh/terminfo
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+
+
 alias ls="ls --color=auto"
+alias la="ls -la --color=auto"
 alias l="ls"
 alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias asd="cd .."
-alias vi="vim"
 
 alias :q="exit"
 
@@ -72,14 +77,18 @@ alias uportal="cd ~/uportal/uPortal/"
 alias initportal="~/scripts/initportal.sh"
 alias portportal="~/scripts/portportal.sh"
 
-alias mobilebuild="~/scripts/buildumobile.sh"
-
 alias devssh="ssh scwiggin@mysail01.dev.oakland.edu"
+
+# git aliases
+alias gs="git status"
+alias gc="git checkout"
+
 
 cd() {
 	builtin cd "$@";
 	ls;
 
+	# put directory in xterm title
 	print -Pn "\e]2;%~\a"
 }
 
@@ -100,7 +109,7 @@ export ANDROID_HOME=/home/steven/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 
-#export GOPATH=/home/steven/Dropbox/development/go/game
+export GOPATH=/home/steven/Dropbox/development/go
 export GOROOT=/opt/go
 export PATH=$GOROOT/bin:$PATH
 
