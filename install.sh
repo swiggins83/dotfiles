@@ -1,10 +1,11 @@
 sudo apt-get install git zsh vim xterm awesome awesome-extra &&
+here=`pwd`
 cd ~
-ln -s .zshrc .
-ln -s .vimrc .
-ln -s .vim .
-ln -s .zsh .
-ln -s .Xdefaults .
+ln -s $here/.zshrc .
+ln -s $here/.vimrc .
+ln -s $here/.vim .
+ln -s $here/.zsh .
+ln -s $here/.Xdefaults .
 cd -
 
 cd ..
