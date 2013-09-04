@@ -1,10 +1,11 @@
 sudo apt-get install git zsh vim xterm awesome awesome-extra &&
-cp .zshrc ~
-cp .vimrc ~
-cp -r .vim ~
-cp -r .zsh ~
-cp .Xdefaults ~
-#sudo cp rc.lua /etc/xdg/awesome/
+cd ~
+ln -s .zshrc .
+ln -s .vimrc .
+ln -s .vim .
+ln -s .zsh .
+ln -s .Xdefaults .
+cd -
 
 cd ..
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
