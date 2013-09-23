@@ -1,11 +1,23 @@
-sudo apt-get install git zsh vim xterm awesome awesome-extra &&
-here=`pwd`
+#!/bin/bash
+if [ "$1" -eq "-f" ]; then
+	sudo apt-get update && sudo apt-get upgrade
+	sudo apt-get install git \
+	zsh \
+	vim \
+	xterm \
+	awesome \
+	awesome-extra \
+	acpi
+fi
+
+dotfiles=`pwd`
+
 cd ~
-ln -s $here/.zshrc .
-ln -s $here/.vimrc .
-ln -s $here/.vim .
-ln -s $here/.zsh .
-ln -s $here/.Xdefaults .
+ln -s $dotfiles/.zshrc .
+ln -s $dotfiles/.vimrc .
+ln -s $dotfiles/.vim .
+ln -s $dotfiles/.zsh .
+ln -s $dotfiles/.Xdefaults .
 cd -
 
 cd ..
