@@ -28,4 +28,7 @@ cd -
 
 cd ~/.vim/bundle
 git clone https://github.com/scrooloose/nerdtree.git
+git clone https://github.com/jistr/vim-nerdtree-tabs.git
+git clone https://github.com/Lokaltog/vim-easymotion.git
+git clone https://github.com/maksimr/vim-jsbeautify.git
 cd -

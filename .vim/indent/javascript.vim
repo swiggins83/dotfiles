@@ -78,9 +78,9 @@ let b:doubleQuoteStringRE = 'javaScriptStringD'
 " Setup for C-style comment indentation.
 "
 let b:blockCommentStartRE  = '/\*'
-let b:blockCommentMiddleRE = '\*'
+let b:blockCommentMiddleRE = ''
 let b:blockCommentEndRE    = '\*/'
-let b:blockCommentMiddleExtra = 1
+let b:blockCommentMiddleExtra = 0
 
 "
 " Indent another level for each non-closed paren/'(' , bracket/'[', and
