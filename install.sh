@@ -13,3 +13,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting
 git clone https://github.com/olivierverdier/zsh-git-prompt
 git clone https://github.com/zsh-users/zsh-history-substring-search
 cd -
+
+cd ~/.vim/bundle
+git clone https://github.com/scrooloose/nerdtree.git
+cd -
