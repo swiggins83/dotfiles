@@ -75,13 +75,11 @@ alias rainbowize="~/extras/Python/rainbowize"
 
 alias uportal="cd ~/uportal/uPortal/"
 alias initportal="~/scripts/initportal.sh"
-alias portportal="~/scripts/portportal.sh"
 
 alias devssh="ssh scwiggin@mysail01.dev.oakland.edu"
 
-# git aliases
-alias gs="git status"
-alias gc="git checkout"
+# git alias
+alias co="checkout"
 
 
 cd() {
@@ -108,10 +106,6 @@ export PATH=$GROOVY_HOME/bin:$PATH
 export ANDROID_HOME=/home/steven/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
-
-export GOPATH=/home/steven/Dropbox/development/go
-export GOROOT=/opt/go
-export PATH=$GOROOT/bin:$PATH
 
 export NODE_HOME=/opt/node
 export PATH=$NODE_HOME/bin:$PATH
@@ -148,4 +142,24 @@ function put {
 		cp -Rdp "$src" .
 	done < ~/.clipboard
 	rm ~/.clipboard
+}
+
+function build {                                                                                │
+	cwd=$(pwd)                                                                                  
+	builtin cd ~/uportal/uPortal                                                           
+	for arg in "$@"                                                                   
+		do                                                                       
+			if [[ $arg == "uportal" ]]; then                            
+				/etc/init.d/uportal stop
+				groovy -Dbuild.portlets.skip=true build.groovy &&                                   
+				/etc/init.d/uportal start
+			elif [[ $arg == "portlets" ]]; then                           
+				groovy -Dbuild.portal.skip=true build.groovy     
+				/etc/init.d/uportal restart
+			else                                    
+				groovy -Dbuild.target.portlet=$arg build.groovy                                     
+				/etc/init.d/uportal restart
+			fi                                                                                     
+	done                                                                                        
+	builtin cd $cwd                                                                             
 }

@@ -10,6 +10,11 @@ set tabstop=4
 set undofile
 set undodir=/home/steven/.vimundo/
 
+" colors
+set t_Co=256
+colorscheme monokai
+
+
 let mapleader=","
 " easy motion
 let g:EasyMotion_leader_key = '<Leader>'
@@ -21,19 +26,14 @@ inoremap {{ {<CR>}<ESC>O
 nmap <silent> <leader>l :NERDTreeToggle<CR>
 
 " custom commands
-command AndroidBuild execute "!ant clean debug uninstall install %"
-map <F1> :w <ESC>:AndroidBuild<CR><Space>
-
-" colors
-set t_Co=256
-colorscheme monokai
+command AndroidBuild execute "!./buildme.sh android % %"
+map <F5> :w <ESC>:AndroidBuild<CR><Space>
 
 " return you to last place in file
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
 " jsLintHint 
-" gg=G on leaving js file
-autocmd FileType javascript noremap <buffer> <F11> :args src/js/src/**/*.js | argdo execute "normal gg=G" | update 
+" :args src/js/src/**/*.js | argdo execute "normal gg=G" | update
 autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/function(/function (<cr> :%s/    /\t/g<cr>
 
 " for nerdtree
