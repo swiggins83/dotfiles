@@ -110,8 +110,8 @@ export PATH=$ANDROID_HOME/platform-tools:$PATH
 export NODE_HOME=/opt/node
 export PATH=$NODE_HOME/bin:$PATH
 
-export UPORTAL_HOME=/home/steven/uportal/uPortal
-export U=/home/steven/uportal/uPortal
+export UPORTAL_HOME=/home/steven/uportal/uportal
+export U=/home/steven/uportal/uportal
 
 export EDITOR=/usr/bin/vim
 
@@ -144,22 +144,20 @@ function put {
 	rm ~/.clipboard
 }
 
-function build {                                                                                │
-	cwd=$(pwd)                                                                                  
-	builtin cd ~/uportal/uPortal                                                           
-	for arg in "$@"                                                                   
-		do                                                                       
-			if [[ $arg == "uportal" ]]; then                            
-				/etc/init.d/uportal stop
-				groovy -Dbuild.portlets.skip=true build.groovy &&                                   
-				/etc/init.d/uportal start
-			elif [[ $arg == "portlets" ]]; then                           
-				groovy -Dbuild.portal.skip=true build.groovy     
-				/etc/init.d/uportal restart
-			else                                    
-				groovy -Dbuild.target.portlet=$arg build.groovy                                     
-				/etc/init.d/uportal restart
-			fi                                                                                     
+function build {
+	builtin cd $UPORTAL_HOME
+	for arg in "$@"; do
+		if [[ $arg == "uportal" ]]; then                            
+			/etc/init.d/uportal stop 
+			groovy -Dbuild.portlets.skip=true build.groovy &&                                   
+			/etc/init.d/uportal start
+		elif [[ $arg == "portlets" ]]; then                           
+			groovy -Dbuild.portal.skip=true build.groovy &&
+			/etc/init.d/uportal restart
+		else                                    
+			groovy -Dbuild.target.portlet=$arg build.groovy &&
+			/etc/init.d/uportal restart
+			fi
 	done                                                                                        
-	builtin cd $cwd                                                                             
+	builtin cd -
 }

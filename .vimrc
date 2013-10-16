@@ -20,8 +20,9 @@ let mapleader=","
 let g:EasyMotion_leader_key = '<Leader>'
 
 " mappings
-inoremap jj <ESC>
-inoremap kk <ESC>
+nnoremap ` @
+inoremap jj <ESC><Right>
+inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
 nmap <silent> <leader>l :NERDTreeToggle<CR>
 

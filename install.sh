@@ -32,4 +32,5 @@ git clone https://github.com/jistr/vim-nerdtree-tabs.git
 git clone https://github.com/Lokaltog/vim-easymotion.git
 git clone https://github.com/maksimr/vim-jsbeautify.git
 git clone https://github.com/vim-scripts/closetag.vim
+git clone https://github.com/bronson/vim-trailing-whitespace
 cd -
