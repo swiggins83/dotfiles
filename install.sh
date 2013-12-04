@@ -1,17 +1,4 @@
 #!/bin/bash
-if [ "$1" -eq "-f" ]; then
-	sudo apt-get update && sudo apt-get upgrade
-	sudo apt-get install git \
-	zsh \
-	vim \
-	xterm \
-	awesome \
-	awesome-extra \
-	acpi
-fi
-
-dotfiles=`pwd`
-
 cd ~
 ln -s $dotfiles/.zshrc .
 ln -s $dotfiles/.vimrc .
@@ -33,4 +20,5 @@ git clone https://github.com/Lokaltog/vim-easymotion.git
 git clone https://github.com/maksimr/vim-jsbeautify.git
 git clone https://github.com/vim-scripts/closetag.vim
 git clone https://github.com/bronson/vim-trailing-whitespace
+git clone https://github.com/akhaku/vim-java-unused-imports
 cd -

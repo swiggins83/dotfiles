@@ -29,11 +29,14 @@ nmap <silent> <leader>l :NERDTreeToggle<CR>
 " custom commands
 command AndroidBuild execute "!./buildme.sh android % %"
 map <F5> :w <ESC>:AndroidBuild<CR><Space>
+command FixWhiteSpace execute ":\%s/\\s\\+$//"
 
 " return you to last place in file
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
-" jsLintHint 
+autocmd FileType java noremap <buffer> <F9> "zyiw:exe "tabedit ".@z.".java"<CR>
+
+" jsLintHint
 " :args src/js/src/**/*.js | argdo execute "normal gg=G" | update
 autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/function(/function (<cr> :%s/    /\t/g<cr>
 
@@ -41,7 +44,7 @@ autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/fu
 "" autocmd vimenter * NERDTree
 "" let g:nerdtree_tabs_open_on_console_startup=1
 
-autocmd vimenter * wincmd l 
+autocmd vimenter * wincmd l
 
 " rename tabs to show tab# and # of viewports
 if exists("+showtabline")
