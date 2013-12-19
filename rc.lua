@@ -119,6 +119,11 @@ batt = widget({ type = "textbox" })
 batt.text = "BATT:"..io.popen("acpi | cut -d, -f2"):read()
 batt_timer = timer({timeout=30})
 batt_timer:add_signal("timeout", function() 
+    if tonumber(io.popen("acpi | cut -d, -f2 | cut -d% -f1"):read()) < 20 then 
+		beautiful.init("/usr/share/awesome/themes/red/theme.lua")
+	else
+		beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+	end
 	batt.text = "BATT:"..io.popen("acpi | cut -d, -f2"):read()
 end)
 batt_timer:start()
