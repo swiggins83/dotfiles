@@ -12,7 +12,7 @@ set undodir=/home/steven/.vimundo/
 
 " colors
 set t_Co=256
-colorscheme monokai
+colorscheme vividchalk
 
 
 let mapleader=","
@@ -24,6 +24,7 @@ nnoremap ` @
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
+inoremap >> ><ESC><<
 nmap <silent> <leader>l :NERDTreeToggle<CR>
 
 " custom commands
@@ -36,13 +37,17 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 autocmd FileType java noremap <buffer> <F9> "zyiw:exe "tabedit ".@z.".java"<CR>
 
+syntax on
+filetype on
+au BufNewFile,BufRead *.py2 set filetype=python
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
 " jsLintHint
 " :args src/js/src/**/*.js | argdo execute "normal gg=G" | update
 autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/function(/function (<cr> :%s/    /\t/g<cr>
-
-" for nerdtree
-"" autocmd vimenter * NERDTree
-"" let g:nerdtree_tabs_open_on_console_startup=1
 
 autocmd vimenter * wincmd l
 

@@ -22,4 +22,7 @@ git clone https://github.com/vim-scripts/closetag.vim
 git clone https://github.com/bronson/vim-trailing-whitespace
 git clone https://github.com/akhaku/vim-java-unused-imports
 git clone https://github.com/kien/rainbow_parentheses.vim
+git clone https://github.com/vim-scripts/VimClojure
 cd -
+
+cp vividchalk.vim ~/.vim/colors/
