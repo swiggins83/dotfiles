@@ -12,20 +12,24 @@ set undodir=/home/steven/.vimundo/
 
 " colors
 set t_Co=256
-colorscheme vividchalk
-
+colorscheme harlequin
 
 let mapleader=","
 " easy motion
 let g:EasyMotion_leader_key = '<Leader>'
 
 " mappings
+nnoremap ; :
+nnoremap : ;
+
+nnoremap ;lkj :wq<CR>
 nnoremap ` @
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
 inoremap >> ><ESC><<
 nmap <silent> <leader>l :NERDTreeToggle<CR>
+noremap <C-P> :colorscheme random<CR>:colorscheme<CR>
 
 " custom commands
 command AndroidBuild execute "!./buildme.sh android % %"
@@ -50,6 +54,9 @@ au Syntax * RainbowParenthesesLoadBraces
 autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/function(/function (<cr> :%s/    /\t/g<cr>
 
 autocmd vimenter * wincmd l
+
+highlight ColorColumn ctermfg=1A1A1A
+let &colorcolumn=join(range(81,999),",")
 
 " rename tabs to show tab# and # of viewports
 if exists("+showtabline")
@@ -93,6 +100,5 @@ if exists("+showtabline")
     set stal=2
     set tabline=%!MyTabLine()
 endif
-" not for nerd tree
 
 execute pathogen#infect()

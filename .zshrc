@@ -1,49 +1,19 @@
-fg_black=%{$'\e[0;30m'%}
-fg_red=%{$'\e[0;31m'%}
-fg_green=%{$'\e[0;32m'%}
-fg_brown=%{$'\e[0;33m'%}
-fg_blue=%{$'\e[0;34m'%}
-fg_purple=%{$'\e[0;35m'%}
+# Colors
 fg_cyan=%{$'\e[0;36m'%}
 fg_lgray=%{$'\e[0;37m'%}
 fg_dgray=%{$'\e[1;30m'%}
 fg_lred=%{$'\e[1;31m'%}
-fg_lgreen=%{$'\e[1;32m'%}
-fg_yellow=%{$'\e[1;33m'%}
 fg_lblue=%{$'\e[1;34m'%}
 fg_pink=%{$'\e[1;35m'%}
-fg_lcyan=%{$'\e[1;36m'%}
 fg_white=%{$'\e[1;37m'%}
-#Text Background Colors
-bg_red=%{$'\e[0;41m'%}
-bg_green=%{$'\e[0;42m'%}
-bg_brown=%{$'\e[0;43m'%}
-bg_blue=%{$'\e[0;44m'%}
-bg_purple=%{$'\e[0;45m'%}
-bg_cyan=%{$'\e[0;46m'%}
-bg_gray=%{$'\e[0;47m'%}
-#Attributes
+# Attributes
 at_normal=%{$'\e[0m'%}
-at_bold=%{$'\e[1m'%}
-at_italics=%{$'\e[3m'%}
-at_underl=%{$'\e[4m'%}
-at_blink=%{$'\e[5m'%}
-at_outline=%{$'\e[6m'%}
-at_reverse=%{$'\e[7m'%}
-at_nondisp=%{$'\e[8m'%}
-at_strike=%{$'\e[9m'%}
-at_boldoff=%{$'\e[22m'%}
-at_italicsoff=%{$'\e[23m'%}
-at_underloff=%{$'\e[24m'%}
-at_blinkoff=%{$'\e[25m'%}
-at_reverseoff=%{$'\e[27m'%}
-at_strikeoff=%{$'\e[29m'%}
 
 precmd() {
 
-	setopt CORRECT 
+	setopt CORRECT
 
-	PROMPT="${fg_lred}%n@%m${fg_pink}%~ $(git_super_status)
+	PROMPT="${fg_cyan}%n@%m${fg_pink}%~ $(git_super_status)
 ${fg_white}> ${at_normal}"
 	RPROMPT="${fg_dgray}"
 }
@@ -57,7 +27,6 @@ bindkey -v
 zmodload zsh/terminfo
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
-
 
 alias ls="ls --color=auto"
 alias la="ls -la --color=auto"
@@ -76,47 +45,50 @@ alias rainbowize="~/extras/Python/rainbowize"
 alias uportal="cd ~/uportal/uPortal/"
 alias initportal="~/scripts/initportal.sh"
 
-alias devssh="ssh scwiggin@mysail01.dev.oakland.edu"
+alias dropbox="/home/steven/.dropbox-dist/dropboxd"
+
+alias v="vim"
+alias c="cd"
+
+alias CD="cd"
 
 # git alias
 alias gco="git checkout"
+alias glog="git log"
 alias gs="git status"
 
-# custom funcs
-cd() {
-	builtin cd "$@";
-	ls;
-
-	# put directory in xterm title
-	print -Pn "\e]2;%~\a"
-}
-
-rem() {
-	mv "$@" ~/.trash
-}
-
-export M2_HOME=/home/steven/uportal/maven
+export M2_HOME=/home/steven/programs/maven
 export M2=$M2_HOME/bin
 export PATH=$M2:$PATH
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
 export PATH=$JAVA_HOME/bin:$PATH
-export ANT_HOME=/home/steven/uportal/ant
+export ANT_HOME=/home/steven/programs/ant
 export PATH=$ANT_HOME/bin:$PATH
-export TOMCAT_HOME=/home/steven/uportal/tomcat
+export TOMCAT_HOME=/home/steven/programs/tomcat
 export PATH=$TOMCAT_HOME:$PATH
-export JAVA_OPTS="-server -XX:MaxPermSize=512m -Xms1024m -Xmx1024m"
-export GROOVY_HOME=/home/steven/uportal/groovy
+export JAVA_OPTS="-server -XX:MaxPermSize=512m -Xms1024m -Xmx2048m"
+export GROOVY_HOME=/home/steven/programs/groovy
 export PATH=$GROOVY_HOME/bin:$PATH
+export GOROOT=/home/steven/programs/go
+export PATH=$GOROOT/bin:$PATH
+export GOPATH=/home/steven/Dropbox/development/go
+export PATH=$GOPATH/bin:$PATH
 
 export ANDROID_HOME=/home/steven/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 
-export NODE_HOME=/opt/node
+export NODE_HOME=/home/steven/programs/node
 export PATH=$NODE_HOME/bin:$PATH
+
+export HSQLDB_HOME=/home/steven/programs/hsql
+export PATH=$HSQLDB_HOME/bin:$PATH
 
 export UPORTAL_HOME=/home/steven/uportal/uportal_gitlab
 export U=$UPORTAL_HOME
+
+export UMOBILE_HOME=/home/steven/uportal/umobile/umobile-app-phonegap/
+export MO=$UMOBILE_HOME
 
 export EDITOR=/usr/bin/vim
 
@@ -132,6 +104,18 @@ else
         export TERM='xterm-color'
 fi
 
+# custom funcs
+cd() {
+	builtin cd "$@";
+	ls;
+
+	# put directory in xterm title
+	print -Pn "\e]2;%~\a"
+}
+
+rem() {
+	mv "$@" ~/.trash
+}
 
 function yank {
 	touch ~/.clipboard
@@ -153,15 +137,41 @@ function build {
 	builtin cd $UPORTAL_HOME
 	for arg in "$@"; do
 		if [[ $arg == "uportal" ]]; then
-			/etc/init.d/uportal stop
+			t stop &&
 			groovy -Dbuild.portlets.skip=true build.groovy &&
-			/etc/init.d/uportal start
+			t start
 		elif [[ $arg == "portlets" ]]; then
+			t stop &&
 			groovy -Dbuild.portal.skip=true build.groovy &&
-			/etc/init.d/uportal restart
+			t start
 		else
 			groovy -Dbuild.target.portlet=$arg build.groovy &&
 		fi
 	done
 	builtin cd -
+}
+
+# hsql
+function h {
+	./scripts/hsql-run.sh
+}
+
+# tomcat
+function t {
+	for i in "$@"; do
+		if [[ $i == "start" ]]; then
+			$TOMCAT_HOME/bin/startup.sh
+		elif [[ $i == "stop" ]]; then
+			kill $(ps aux | grep 'tomcat' | awk '{print $2}')
+			sleep 5
+		elif [[ $i == "restart" ]]; then
+			kill $(ps aux | grep 'tomcat' | awk '{print $2}') &&
+			sleep 10
+			$TOMCAT_HOME/bin/startup.sh
+		elif [[ $i == "s" ]]; then
+			ps aux | grep 'tomcat'
+		else
+			echo "whachu tryna do"
+		fi
+	done
 }
