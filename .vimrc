@@ -1,3 +1,5 @@
+execute pathogen#infect()
+
 set autoindent
 set cursorline
 set number
@@ -6,44 +8,63 @@ set si
 set laststatus=2
 set shiftwidth=4
 set tabstop=4
-
+set expandtab
 set undofile
 set undodir=/home/steven/.vimundo/
 
 " colors
 set t_Co=256
-colorscheme harlequin
-
-let mapleader=","
-" easy motion
-let g:EasyMotion_leader_key = '<Leader>'
+colorscheme herald
 
 " mappings
 nnoremap ; :
 nnoremap : ;
-
-nnoremap ;lkj :wq<CR>
+nnoremap asd :wq<CR>
 nnoremap ` @
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
 inoremap >> ><ESC><<
-nmap <silent> <leader>l :NERDTreeToggle<CR>
-noremap <C-P> :colorscheme random<CR>:colorscheme<CR>
 
-" custom commands
-command AndroidBuild execute "!./buildme.sh android % %"
-map <F5> :w <ESC>:AndroidBuild<CR><Space>
-command FixWhiteSpace execute ":\%s/\\s\\+$//"
+" for the yankings
+nnoremap yj Vj :call GetVisual()<CR>
+nnoremap yk Vk :call GetVisual()<CR>
+fu! GetVisual() range
+    let reg_save = getreg('"')
+    let regtype_save = getregtype('"')
+    let cb_save = &clipboard
+    set clipboard&
+    normal! ""gvy
+    let selection = getreg('"')
+    call setreg('"', reg_save, regtype_save)
+    let &clipboard = cb_save
+    return selection
+endfunction
+
+" leader mappings
+let mapleader=","
+let g:EasyMotion_leader_key = '<Leader>'
+nmap <leader>p ;set paste!<CR>
+nmap <silent> <leader>l ;NERDTreeToggle<CR>
+autocmd vimenter * wincmd l
+
+command Exec execute "!./% %"
+map <F5> ;w <ESC>;Exec<CR>
 
 " return you to last place in file
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+au BufReadPost *
+	\ if line("'\"") > 1 && line("'\"") <= line("$") |
+	\ exe "normal! g`\"" |
+	\ endif
 
+" file specifics
 autocmd FileType java noremap <buffer> <F9> "zyiw:exe "tabedit ".@z.".java"<CR>
+au BufNewFile,BufRead *.py2 set filetype=python
+au BufNewFile,BufRead *.jsp set filetype=html
 
+" rainbows!
 syntax on
 filetype on
-au BufNewFile,BufRead *.py2 set filetype=python
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
@@ -52,11 +73,6 @@ au Syntax * RainbowParenthesesLoadBraces
 " jsLintHint
 " :args src/js/src/**/*.js | argdo execute "normal gg=G" | update
 autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/function(/function (<cr> :%s/    /\t/g<cr>
-
-autocmd vimenter * wincmd l
-
-highlight ColorColumn ctermfg=1A1A1A
-let &colorcolumn=join(range(81,999),",")
 
 " rename tabs to show tab# and # of viewports
 if exists("+showtabline")
@@ -100,5 +116,3 @@ if exists("+showtabline")
     set stal=2
     set tabline=%!MyTabLine()
 endif
-
-execute pathogen#infect()

@@ -15,7 +15,7 @@ precmd() {
 
 	PROMPT="${fg_cyan}%n@%m${fg_pink}%~ $(git_super_status)
 ${fg_white}> ${at_normal}"
-	RPROMPT="${fg_dgray}"
+	RPROMPT="${fg_dgray} $(spotify_control.py -d artist title album)"
 }
 
 HISTFILE=~/.histfile
@@ -38,7 +38,7 @@ alias asd="cd .."
 
 alias :q="exit"
 
-alias lockandsync="~/scripts/lockandsync.sh"
+alias stats="~/scripts/vim_git_status.sh"
 
 alias rainbowize="~/extras/Python/rainbowize"
 
@@ -47,8 +47,11 @@ alias initportal="~/scripts/initportal.sh"
 
 alias dropbox="/home/steven/.dropbox-dist/dropboxd"
 
-alias v="vim"
+alias v="vim -p"
 alias c="cd"
+alias vim="vim -p"
+alias du="du -h"
+alias df="df -h"
 
 alias CD="cd"
 
@@ -84,8 +87,11 @@ export PATH=$NODE_HOME/bin:$PATH
 export HSQLDB_HOME=/home/steven/programs/hsql
 export PATH=$HSQLDB_HOME/bin:$PATH
 
+export PATH=$PATH:/home/steven/extras/PySpotifyInfo
+
+export PORTAL_HOME=/home/steven/uportal/uPortal
 export UPORTAL_HOME=/home/steven/uportal/uportal_gitlab
-export U=$UPORTAL_HOME
+export U=$PORTAL_HOME
 
 export UMOBILE_HOME=/home/steven/uportal/umobile/umobile-app-phonegap/
 export MO=$UMOBILE_HOME
@@ -97,6 +103,8 @@ source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 source /home/steven/extras/zsh-git-prompt/zshrc.sh
+
+source /home/steven/extras/PySpotifyInfo/spot_info.zsh
 
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
         export TERM='xterm-256color'
@@ -134,7 +142,7 @@ function put {
 }
 
 function build {
-	builtin cd $UPORTAL_HOME
+	builtin cd $U
 	for arg in "$@"; do
 		if [[ $arg == "uportal" ]]; then
 			t stop &&
@@ -162,13 +170,13 @@ function t {
 		if [[ $i == "start" ]]; then
 			$TOMCAT_HOME/bin/startup.sh
 		elif [[ $i == "stop" ]]; then
-			kill $(ps aux | grep 'tomcat' | awk '{print $2}')
+			kill -9 $(ps aux | grep 'tomcat' | awk '{print $2}')
 			sleep 5
 		elif [[ $i == "restart" ]]; then
-			kill $(ps aux | grep 'tomcat' | awk '{print $2}') &&
+			kill -9 $(ps aux | grep 'tomcat' | awk '{print $2}') &&
 			sleep 10
 			$TOMCAT_HOME/bin/startup.sh
-		elif [[ $i == "s" ]]; then
+		elif [[ $i == "s" || $i == "status" ]]; then
 			ps aux | grep 'tomcat'
 		else
 			echo "whachu tryna do"
