@@ -13,9 +13,13 @@ precmd() {
 
 	setopt CORRECT
 
-	PROMPT="${fg_cyan}%n@%m${fg_pink}%~ $(git_super_status)
+	PROMPT="${fg_cyan}%n@%m${fg_lred}%~ $(git_super_status)
 ${fg_white}> ${at_normal}"
 	RPROMPT="${fg_dgray} $(spotify_control.py -d artist title album)"
+}
+
+chpwd() {
+    bindkey -s "\C-b" "build $(basename $(pwd))\n"
 }
 
 HISTFILE=~/.histfile
@@ -23,6 +27,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 unsetopt beep
 bindkey -v
+
+bindkey -s "\C-n" "clear; mvn clean package\n"
 
 zmodload zsh/terminfo
 bindkey "$terminfo[kcuu1]" history-substring-search-up
@@ -40,22 +46,17 @@ alias :q="exit"
 
 alias stats="~/scripts/vim_git_status.sh"
 
-alias rainbowize="~/extras/Python/rainbowize"
-
-alias uportal="cd ~/uportal/uPortal/"
 alias initportal="~/scripts/initportal.sh"
 
 alias dropbox="/home/steven/.dropbox-dist/dropboxd"
 
 alias v="vim -p"
 alias c="cd"
+alias CD="cd"
 alias vim="vim -p"
 alias du="du -h"
 alias df="df -h"
 
-alias CD="cd"
-
-# git alias
 alias gco="git checkout"
 alias glog="git log"
 alias gs="git status"
@@ -106,12 +107,6 @@ source /home/steven/extras/zsh-git-prompt/zshrc.sh
 
 source /home/steven/extras/PySpotifyInfo/spot_info.zsh
 
-if [ -e /usr/share/terminfo/x/xterm-256color ]; then
-        export TERM='xterm-256color'
-else
-        export TERM='xterm-color'
-fi
-
 # custom funcs
 cd() {
 	builtin cd "$@";
@@ -123,22 +118,6 @@ cd() {
 
 rem() {
 	mv "$@" ~/.trash
-}
-
-function yank {
-	touch ~/.clipboard
-	for i in "$@"; do
-		if [[ $i != /* ]]; then i=$PWD/$i; fi
-		i=${i//\\/\\\\}; i=${i//$'\n'/$'\\\n'}
-		printf '%s\n' "$i"
-	done >> ~/.clipboard
-}
-
-function put {
-	while IFS= read src; do
-		cp -Rdp "$src" .
-	done < ~/.clipboard
-	rm ~/.clipboard
 }
 
 function build {

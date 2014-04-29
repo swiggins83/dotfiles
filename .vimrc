@@ -19,27 +19,14 @@ colorscheme herald
 " mappings
 nnoremap ; :
 nnoremap : ;
-nnoremap asd :wq<CR>
-nnoremap ` @
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
-inoremap {{ {<CR>}<ESC>O
+inoremap {a {<CR>}<ESC>O
 inoremap >> ><ESC><<
 
-" for the yankings
-nnoremap yj Vj :call GetVisual()<CR>
-nnoremap yk Vk :call GetVisual()<CR>
-fu! GetVisual() range
-    let reg_save = getreg('"')
-    let regtype_save = getregtype('"')
-    let cb_save = &clipboard
-    set clipboard&
-    normal! ""gvy
-    let selection = getreg('"')
-    call setreg('"', reg_save, regtype_save)
-    let &clipboard = cb_save
-    return selection
-endfunction
+" for the yankings and the pastings
+nnoremap y "+y
+vnoremap y "+y
 
 " leader mappings
 let mapleader=","
