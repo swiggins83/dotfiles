@@ -26,6 +26,7 @@ git clone https://github.com/akhaku/vim-java-unused-imports
 git clone https://github.com/kien/rainbow_parentheses.vim
 git clone https://github.com/vim-scripts/VimClojure
 git clone https://github.com/mattn/emmet-vim.git
+git clone git://github.com/mkitt/tabline.vim.git
 cd -
 
 cp herald.vim ~/.vim/colors/

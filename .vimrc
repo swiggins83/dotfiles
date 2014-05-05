@@ -21,12 +21,12 @@ nnoremap ; :
 nnoremap : ;
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
-inoremap {a {<CR>}<ESC>O
+inoremap {{ {<CR>}<ESC>O
 inoremap >> ><ESC><<
 
 " for the yankings and the pastings
-nnoremap y "+y
-vnoremap y "+y
+nnoremap y "+yy y
+nnoremap yj "+2yy
 
 " leader mappings
 let mapleader=","
@@ -35,6 +35,7 @@ nmap <leader>p ;set paste!<CR>
 nmap <silent> <leader>l ;NERDTreeToggle<CR>
 autocmd vimenter * wincmd l
 
+" custom commands
 command Exec execute "!./% %"
 map <F5> ;w <ESC>;Exec<CR>
 
@@ -49,6 +50,9 @@ autocmd FileType java noremap <buffer> <F9> "zyiw:exe "tabedit ".@z.".java"<CR>
 au BufNewFile,BufRead *.py2 set filetype=python
 au BufNewFile,BufRead *.jsp set filetype=html
 
+" javas
+inoremap sout System.out.println(
+
 " rainbows!
 syntax on
 filetype on
@@ -60,46 +64,3 @@ au Syntax * RainbowParenthesesLoadBraces
 " jsLintHint
 " :args src/js/src/**/*.js | argdo execute "normal gg=G" | update
 autocmd FileType javascript noremap <buffer> <F12> :call JsBeautify()<cr> :%s/function(/function (<cr> :%s/    /\t/g<cr>
-
-" rename tabs to show tab# and # of viewports
-if exists("+showtabline")
-    function! MyTabLine()
-        let s = ''
-        let wn = ''
-        let t = tabpagenr()
-        let i = 1
-        while i <= tabpagenr('$')
-            let buflist = tabpagebuflist(i)
-            let winnr = tabpagewinnr(i)
-            let s .= '%' . i . 'T'
-            let s .= (i == t ? '%1*' : '%2*')
-            let s .= ' '
-            let wn = tabpagewinnr(i,'$')
-
-            let s .= (i== t ? '%#TabNumSel#' : '%#TabNum#')
-            let s .= i
-            let s .= ' %*'
-            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
-            let bufnr = buflist[winnr - 1]
-            let file = bufname(bufnr)
-            let buftype = getbufvar(bufnr, 'buftype')
-            if buftype == 'nofile'
-                if file =~ '\/.'
-                    let file = substitute(file, '.*\/\ze.', '', '')
-                endif
-            else
-                let file = fnamemodify(file, ':p:t')
-            endif
-            if file == ''
-                let file = '[No Name]'
-            endif
-            let s .= file
-            let s .= (i == t ? '%m' : '')
-            let i = i + 1
-        endwhile
-        let s .= '%T%#TabLineFill#%='
-        return s
-    endfunction
-    set stal=2
-    set tabline=%!MyTabLine()
-endif
