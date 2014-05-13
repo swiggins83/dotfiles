@@ -57,9 +57,8 @@ inoremap sout System.out.println(
 inoremap clog console.log(
 
 fu! Foldy()
-    let w:should_fold = exists('w:should_fold') ? !w:should_fold : 1
 
-    if w:should_fold
+    if foldclosed('.') == '-1'
         normal! zfat
     else
         normal! za
