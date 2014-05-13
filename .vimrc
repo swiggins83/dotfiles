@@ -23,6 +23,7 @@ inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
 inoremap >> ><ESC><<
+nnoremap zz :call Foldy()<CR>
 
 " for the yankings and the pastings
 nnoremap y "+yy y
@@ -52,6 +53,18 @@ au BufNewFile,BufRead *.jsp set filetype=html
 
 " javas
 inoremap sout System.out.println(
+" javascripts
+inoremap clog console.log(
+
+fu! Foldy()
+    let w:should_fold = exists('w:should_fold') ? !w:should_fold : 1
+
+    if w:should_fold
+        normal! zfat
+    else
+        normal! za
+    endif
+endfunction
 
 " rainbows!
 syntax on
