@@ -8,8 +8,6 @@ require("beautiful")
 require("naughty")
 -- Vicious library
 require("vicious")
--- Bashets -- for batt widget
-require("bashets")
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -44,7 +42,7 @@ end
 beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "xterm -fg white -bg grey10"
+terminal = "xterm -fg white -bg black"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -78,7 +76,7 @@ layouts =
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ "su", "www", "music", "game", "im", 6, 7 }, s, layouts[1])
+    tags[s] = awful.tag({ ">_", "www", "music", "im", "etc", 6, 7 }, s, layouts[1])
 end
 -- }}}
 
@@ -110,24 +108,32 @@ mysystray = widget({ type = "systray" })
 
 padding = widget({ type = "textbox" })
 padding.text = " | "
+
+-- cpu and memory widgets
 cpu = widget({ type = "textbox" })
-vicious.register( cpu, vicious.widgets.cpu, "CPU:$1%" )
+vicious.register(cpu, vicious.widgets.cpu, "CPU:$1%")
 mem = widget({ type = "textbox" })
-vicious.register( mem, vicious.widgets.mem, "MEM:$1%" )
+vicious.register(mem, vicious.widgets.mem, "MEM:$1%")
 
-batt = widget({ type = "textbox" })
-batt.text = "BATT:"..io.popen("acpi | cut -d, -f2"):read()
-batt_timer = timer({timeout=30})
-batt_timer:add_signal("timeout", function() 
-    if tonumber(io.popen("acpi | cut -d, -f2 | cut -d% -f1"):read()) < 20 then 
-		beautiful.init("/usr/share/awesome/themes/red/theme.lua")
-	else
-		beautiful.init("/usr/share/awesome/themes/default/theme.lua")
-	end
-	batt.text = "BATT:"..io.popen("acpi | cut -d, -f2"):read()
-end)
-batt_timer:start()
+-- disk space (file system) widget
+fs = widget({ type = "textbox" })
+function update_fs()
+    return "FS:"..io.popen("df /dev/sda5 | awk 'NR > 1 {print $5}'"):read()
+end
+fs.text = update_fs()
+fs_timer = timer({ timeout = 600 })
+fs_timer:add_signal("timeout", function() update_fs() end)
+fs_timer:start()
 
+-- volume widget
+vol = widget({ type = "textbox" })
+function update_vol()
+   return "VOL:"..io.popen("amixer get Master | grep -s '\[on\]' && amixer get Master | egrep -o '[0-9]+%' || echo 'M'"):read()
+end
+vol.text = update_vol()
+vol_timer = timer({ timeout = 2 })
+vol_timer:add_signal("timeout", function() update_vol() end)
+vol_timer:start()
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -207,11 +213,13 @@ for s = 1, screen.count() do
         mytextclock,
         s == 1 and mysystray or nil,
 		padding,
-		batt,
-		padding,
 		mem,
 		padding,
 		cpu,
+        padding,
+        fs,
+        padding,
+        vol,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
@@ -249,6 +257,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
     awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
     awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+    awful.key({ modkey, "Control" }, "Left", function () awful.screen.focus_relative( 1) end),
+    awful.key({ modkey, "Control" }, "Right", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
     awful.key({ modkey,           }, "Tab",
         function ()
@@ -283,7 +293,34 @@ globalkeys = awful.util.table.join(
                   mypromptbox[mouse.screen].widget,
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
-              end)
+              end),
+
+    -- Customs
+    awful.key({ }, "F1",
+                function()
+                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c pp")
+                end),
+    awful.key({ }, "F2",
+                function()
+                    awful.util.spawn_with_shell("echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
+                end),
+    awful.key({ }, "F3",
+                function()
+                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c previous; echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
+                end),
+    awful.key({ }, "F4",
+                function()
+                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c next; echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
+                end),
+    awful.key({ }, "F5", function() awful.util.spawn("i3lock") end),
+    awful.key({ }, "F7",
+                function()
+                    awful.util.spawn("amixer -q sset Master 4%-")
+                end),
+    awful.key({ }, "F8",
+                function()
+                    awful.util.spawn("amixer -q sset Master 4%+")
+                end)
 )
 
 clientkeys = awful.util.table.join(
@@ -371,8 +408,8 @@ awful.rules.rules = {
     { rule = { class = "gimp" },
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
+    { rule = { class = "Firefox" },
+      properties = { tag = tags[1][7] } },
 }
 -- }}}
 
@@ -406,8 +443,9 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
-awful.util.spawn_with_shell(terminal)
-awful.util.spawn_with_shell("google-chrome")
-awful.util.spawn_with_shell("dropbox start")
-awful.util.spawn_with_shell("xrandr --output HDMI-0 --mode 1280x720 --right-of LVDS")
+-- awful.util.spawn_with_shell(terminal)
+-- awful.util.spawn_with_shell("google-chrome")
+-- awful.util.spawn_with_shell("~/.dropbox-dist/dropboxd start")
+-- awful.util.spawn_with_shell("pidgin")
+-- awful.util.spawn_with_shell("spotify")
 -- }}}
