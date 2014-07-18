@@ -42,7 +42,7 @@ end
 beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "xterm -fg white -bg black"
+terminal = "xterm -fg white -bg grey10"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -238,7 +238,7 @@ root.buttons(awful.util.table.join(
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
+    awful.key({ "Control"         }, "space", awful.tag.history.restore),
 
     awful.key({ modkey,           }, "j",
         function ()
@@ -279,8 +279,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end),
     awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
-    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
+    awful.key({ modkey,           }, "Escape", function () awful.layout.inc(layouts,  1) end),
+    awful.key({ modkey, "Shift"   }, "Escape", function () awful.layout.inc(layouts, -1) end),
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
@@ -302,7 +302,7 @@ globalkeys = awful.util.table.join(
                 end),
     awful.key({ }, "F2",
                 function()
-                    awful.util.spawn_with_shell("echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
+                    awful.util.spawn_with_shell("echo $(spotify_control.py -d title) ': by ' $(spotify_control.py -d artist) | festival --tts")
                 end),
     awful.key({ }, "F3",
                 function()
@@ -320,7 +320,10 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "F8",
                 function()
                     awful.util.spawn("amixer -q sset Master 4%+")
-                end)
+                end),
+
+    awful.key({ "Control" }, "j", awful.tag.viewprev ),
+    awful.key({ "Control" }, "k", awful.tag.viewnext )
 )
 
 clientkeys = awful.util.table.join(
