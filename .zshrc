@@ -1,21 +1,24 @@
-# Colors
+# colors
 fg_cyan=%{$'\e[0;36m'%}
-fg_lgray=%{$'\e[0;37m'%}
-fg_dgray=%{$'\e[1;30m'%}
 fg_lred=%{$'\e[1;31m'%}
-fg_lblue=%{$'\e[1;34m'%}
-fg_pink=%{$'\e[1;35m'%}
 fg_white=%{$'\e[1;37m'%}
-# Attributes
+# attributes
 at_normal=%{$'\e[0m'%}
+
+fpath=(/home/steven/extras/zsh-completions/src/$fpath)
+source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+source /home/steven/extras/zsh-git-prompt/zshrc.sh
+
+source /home/steven/extras/PySpotifyInfo/spot_info.zsh
 
 precmd() {
 
-	setopt CORRECT
+    PROMPT="${fg_cyan}%n@%m${fg_lred}%~ ${at_normal}$(git_super_status)
+${fg_white}> "
+    RPROMPT="${fg_dgray} $(spotify_control.py -d artist title album)"
 
-	PROMPT="${fg_cyan}%n@%m${fg_lred}%~ $(git_super_status)
-${fg_white}> ${at_normal}"
-	RPROMPT="${fg_dgray} $(spotify_control.py -d artist title album)"
 }
 
 chpwd() {
@@ -28,7 +31,7 @@ SAVEHIST=10000
 unsetopt beep
 bindkey -v
 
-bindkey -s "\C-n" "clear; mvn clean package\n"
+bindkey -s "\C-w" "cd ..\n"
 
 zmodload zsh/terminfo
 bindkey "$terminfo[kcuu1]" history-substring-search-up
@@ -42,7 +45,10 @@ alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias asd="cd .."
 
-alias :q="exit"
+alias sag="sudo apt-get"
+
+alias tu="amixer -q sset Master 4%+"
+alias td="amixer -q sset Master 4%-"
 
 alias stats="~/scripts/vim_git_status.sh"
 
@@ -50,6 +56,11 @@ alias initportal="~/scripts/initportal.sh"
 
 alias dropbox="/home/steven/.dropbox-dist/dropboxd"
 
+alias pgadmin="/opt/PostgreSQL/9.3/pgAdmin3/bin/pgadmin3"
+
+alias psiman="$U/bin/webapp_cntl.sh"
+
+# nav aliases
 alias v="vim -p"
 alias c="cd"
 alias CD="cd"
@@ -57,9 +68,13 @@ alias vim="vim -p"
 alias du="du -h"
 alias df="df -h"
 
+# git aliases
 alias gco="git checkout"
 alias glog="git log"
 alias gs="git status"
+alias gd="git diff"
+
+alias lel="xdg-open http://blogimages.seniorennet.be/kathleen1/1463910-c65edff341c1fb335cd62647a930be3c.gif"
 
 export M2_HOME=/home/steven/programs/maven
 export M2=$M2_HOME/bin
@@ -92,20 +107,12 @@ export PATH=$PATH:/home/steven/extras/PySpotifyInfo
 
 export PORTAL_HOME=/home/steven/uportal/uPortal
 export UPORTAL_HOME=/home/steven/uportal/uportal_gitlab
-export U=$PORTAL_HOME
+export U=$UPORTAL_HOME
 
 export UMOBILE_HOME=/home/steven/uportal/umobile/umobile-app-phonegap/
 export MO=$UMOBILE_HOME
 
 export EDITOR=/usr/bin/vim
-
-fpath=(/home/steven/extras/zsh-completions/src/$fpath)
-source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-source /home/steven/extras/zsh-git-prompt/zshrc.sh
-
-source /home/steven/extras/PySpotifyInfo/spot_info.zsh
 
 # custom funcs
 cd() {
@@ -155,6 +162,9 @@ function t {
 			kill -9 $(ps aux | grep 'tomcat' | awk '{print $2}') &&
 			sleep 10
 			$TOMCAT_HOME/bin/startup.sh
+        elif [[ $i == "clean" ]]; then
+            rm -rf $TOMCAT_HOME/webapps/*
+            rm -rf $TOMCAT_HOME/work/Catalina/localhost/*
 		elif [[ $i == "s" || $i == "status" ]]; then
 			ps aux | grep 'tomcat'
 		else
