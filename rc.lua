@@ -128,11 +128,11 @@ fs_timer:start()
 -- volume widget
 vol = widget({ type = "textbox" })
 function update_vol()
-   return "VOL:"..io.popen("amixer get Master | grep -s '\[on\]' && amixer get Master | egrep -o '[0-9]+%' || echo 'M'"):read()
+   return "VOL:"..io.popen("amixer get Master | egrep -o '[0-9]+%' || echo 'M'"):read()
 end
 vol.text = update_vol()
-vol_timer = timer({ timeout = 2 })
-vol_timer:add_signal("timeout", function() update_vol() end)
+vol_timer = timer({ timeout = 5 })
+vol_timer:add_signal("timeout", function() vol.text = update_vol() end)
 vol_timer:start()
 
 -- Create a wibox for each screen and add it
@@ -312,7 +312,7 @@ globalkeys = awful.util.table.join(
                 function()
                     awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c next; echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
                 end),
-    awful.key({ }, "F5", function() awful.util.spawn("i3lock") end),
+    awful.key({ }, "F5", function() awful.util.spawn("i3lock -i /home/steven/pictures/wallpapers/png/pixel_landscape-wallpaper-2560x1440.png") end),
     awful.key({ }, "F7",
                 function()
                     awful.util.spawn("amixer -q sset Master 4%-")
@@ -451,4 +451,8 @@ client.add_signal("unfocus", function(c) c.border_color = beautiful.border_norma
 -- awful.util.spawn_with_shell("~/.dropbox-dist/dropboxd start")
 -- awful.util.spawn_with_shell("pidgin")
 -- awful.util.spawn_with_shell("spotify")
+
+awful.util.spawn_with_shell("xrandr --output HDMI1 --right-of VGA1")
+awful.util.spawn_with_shell("xrdb -merge /home/steven/.Xresources")
+
 -- }}}

@@ -5,7 +5,6 @@ fg_white=%{$'\e[1;37m'%}
 # attributes
 at_normal=%{$'\e[0m'%}
 
-fpath=(/home/steven/extras/zsh-completions/src/$fpath)
 source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
 
@@ -23,6 +22,17 @@ ${fg_white}> "
 
 chpwd() {
     bindkey -s "\C-b" "build $(basename $(pwd))\n"
+}
+
+#in chpwd: skipEmptyFolders &> /dev/null
+#but this is broken so nvm
+function skipEmptyFolders() {
+    if [[ $(ls | wc -l) == 1 ]]; then
+        if [[ $(expr length $OLDPWD) -lt $(expr length $PWD) ]]; then
+            echo "Jumping to $(ls -d */)"
+            cd $(ls -d */)
+        fi
+    fi
 }
 
 HISTFILE=~/.histfile
@@ -57,8 +67,11 @@ alias initportal="~/scripts/initportal.sh"
 alias dropbox="/home/steven/.dropbox-dist/dropboxd"
 
 alias pgadmin="/opt/PostgreSQL/9.3/pgAdmin3/bin/pgadmin3"
+alias sqldeveloper="$HOME/programs/sqldeveloper/sqldeveloper.sh &"
 
 alias psiman="$U/bin/webapp_cntl.sh"
+
+alias adminify="/home/steven/scripts/adminify.sh"
 
 # nav aliases
 alias v="vim -p"
@@ -145,11 +158,6 @@ function build {
 	builtin cd -
 }
 
-# hsql
-function h {
-	./scripts/hsql-run.sh
-}
-
 # tomcat
 function t {
 	for i in "$@"; do
@@ -171,4 +179,28 @@ function t {
 			echo "whachu tryna do"
 		fi
 	done
+}
+
+# hsql
+function h {
+    for i in "$@"; do
+        if [[ $i == "start" ]]; then
+            cd
+            java -cp /home/steven/programs/hsql/lib/hsqldb.jar org.hsqldb.server.Server &
+            cd -
+        elif [[ $i == "stop" ]]; then
+            kill -9 $(ps aux | grep 'hsqldb' | awk '{print $2}')
+            sleep 1
+        elif [[ $i == "restart" ]]; then
+            kill -9 $(ps aux | grep 'hsqldb' | awk '{print $2}')
+            sleep 5
+            cd
+            java -cp /home/steven/programs/hsql/lib/hsqldb.jar org.hsqldb.server.Server &
+            cd -
+        elif [[ $i == "s" || $i == "status" ]]; then
+            ps aux | grep 'hsqldb'
+        else
+            echo "whachu tryna do"
+        fi
+    done
 }
