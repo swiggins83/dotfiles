@@ -76,7 +76,11 @@ layouts =
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ ">_", "www", "music", "im", "etc", 6, 7 }, s, layouts[1])
+    if s == 1 then
+        tags[s] = awful.tag({ ">_", "ide", "build", "im", "etc" }, s, layouts[1])
+    else
+        tags[s] = awful.tag({ ">_", "www", "music", "etc" }, s, layouts[1])
+    end
 end
 -- }}}
 
@@ -422,7 +426,7 @@ awful.rules.rules = {
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     { rule = { class = "Firefox" },
-      properties = { tag = tags[1][7] } },
+      properties = { tag = tags[1][5] } },
 }
 -- }}}
 
