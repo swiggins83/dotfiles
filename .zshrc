@@ -1,9 +1,9 @@
 # colors
-fg_cyan=%{$'\e[0;36m'%}
-fg_lred=%{$'\e[1;31m'%}
-fg_white=%{$'\e[1;37m'%}
+cyan=%{$fg[cyan]%}
+red=%{$fg[red]%}
+green=%{$fg[green]%}
+white=%{$fg[white]%}
 # attributes
-at_normal=%{$'\e[0m'%}
 
 source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
@@ -14,9 +14,9 @@ source /home/steven/extras/PySpotifyInfo/spot_info.zsh
 
 precmd() {
 
-    PROMPT="${fg_cyan}%n@%m${fg_lred}%~ ${at_normal}$(git_super_status)
-${fg_white}> "
-    RPROMPT="${fg_dgray} $(spotify_control.py -d artist title album)"
+    PROMPT="${cyan}%n@%m${red}%~ $(git_super_status) ${green}%*%f
+${white}> "
+    RPROMPT="$(spotify_control.py -d artist title album)"
 
 }
 
@@ -62,12 +62,9 @@ alias td="amixer -q sset Master 4%-"
 
 alias stats="~/scripts/vim_git_status.sh"
 
+alias wmname="~/extras/wmname/wmname"
+
 alias initportal="~/scripts/initportal.sh"
-
-alias dropbox="/home/steven/.dropbox-dist/dropboxd"
-
-alias pgadmin="/opt/PostgreSQL/9.3/pgAdmin3/bin/pgadmin3"
-alias sqldeveloper="$HOME/programs/sqldeveloper/sqldeveloper.sh &"
 
 alias psiman="$U/bin/webapp_cntl.sh"
 
@@ -82,10 +79,18 @@ alias du="du -h"
 alias df="df -h"
 
 # git aliases
-alias gco="git checkout"
-alias glog="git log"
-alias gs="git status"
+alias ga="git add"
+alias gb="git branch"
+alias gc="git commit -v"
+alias gca="git commit --amend"
 alias gd="git diff"
+alias gdc="git diff --cached"
+alias gcp="git cherry-pick"
+alias gco="git checkout"
+alias gp="git pull"
+alias gl="git log"
+alias gs="git status"
+alias gh='git log --pretty=format:"%C(auto)%h %ad | %s%d %C(red)[%an]" --graph --date=short'
 
 alias lel="xdg-open http://blogimages.seniorennet.be/kathleen1/1463910-c65edff341c1fb335cd62647a930be3c.gif"
 
@@ -110,20 +115,14 @@ export ANDROID_HOME=/home/steven/android/sdk
 export PATH=$ANDROID_HOME/tools:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 
-export NODE_HOME=/home/steven/programs/node
-export PATH=$NODE_HOME/bin:$PATH
-
 export HSQLDB_HOME=/home/steven/programs/hsql
 export PATH=$HSQLDB_HOME/bin:$PATH
 
 export PATH=$PATH:/home/steven/extras/PySpotifyInfo
 
 export PORTAL_HOME=/home/steven/uportal/uPortal
-export UPORTAL_HOME=/home/steven/uportal/uportal_gitlab
+export UPORTAL_HOME=/home/steven/uportal/uportal
 export U=$UPORTAL_HOME
-
-export UMOBILE_HOME=/home/steven/uportal/umobile/umobile-app-phonegap/
-export MO=$UMOBILE_HOME
 
 export EDITOR=/usr/bin/vim
 
@@ -173,6 +172,7 @@ function t {
         elif [[ $i == "clean" ]]; then
             rm -rf $TOMCAT_HOME/webapps/*
             rm -rf $TOMCAT_HOME/work/Catalina/localhost/*
+            rm -rf $TOMCAT_HOME/temp/*
 		elif [[ $i == "s" || $i == "status" ]]; then
 			ps aux | grep 'tomcat'
 		else
