@@ -14,7 +14,7 @@ source /home/steven/extras/PySpotifyInfo/spot_info.zsh
 
 precmd() {
 
-    PROMPT="${cyan}%n@%m${red}%~ $(git_super_status) ${green}%*%f
+    PROMPT="${cyan}%n@%m${red}%~ %{$reset_color%}$(git_super_status) ${green}%*%f
 ${white}> "
     RPROMPT="$(spotify_control.py -d artist title album)"
 
