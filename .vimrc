@@ -30,11 +30,12 @@ nnoremap QQ :qall<CR>
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
-inoremap >> ><ESC><<
 inoremap sout System.out.println();<ESC>hha
 inoremap clog console.log();<ESC>hha
 nmap <leader>n ;set nu!<CR>
 nmap <leader>p ;set paste! <CR> ;set nu! <CR> ;IndentLinesToggle <CR>
+nnoremap <leader>s :/\(<<<<\\|====\\|>>>>\)<CR>
+let g:ctrlp_cmd='CtrlP .'
 
 " return you to last place in file
 au BufReadPost *
@@ -53,6 +54,7 @@ let g:mta_filetype = {
     \ 'xhtml': 1,
     \ 'xml': 1,
     \ 'jsp': 1,
+    \ 'js': 1,
 \}
 
 fu! Foldy()
