@@ -118,7 +118,7 @@ vicious.register(mem, vicious.widgets.mem, "MEM:$1%")
 -- disk space (file system) widget
 fs = widget({ type = "textbox" })
 function update_fs()
-    return "FS:"..io.popen("df /dev/sda5 | awk 'NR > 1 {print $5}'"):read()
+    return "FS:"..io.popen("df /dev/sda1 | awk 'NR > 1 {print $5}'"):read()
 end
 fs.text = update_fs()
 fs_timer = timer({ timeout = 600 })
@@ -306,21 +306,31 @@ globalkeys = awful.util.table.join(
                 end),
     awful.key({ }, "F3",
                 function()
-                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c previous; echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
+                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c previous")
                 end),
     awful.key({ }, "F4",
                 function()
-                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c next; echo $(spotify_control.py -d title) ' by ' $(spotify_control.py -d artist) | festival --tts")
+                    awful.util.spawn_with_shell("/home/steven/extras/PySpotifyInfo/spotify_control.py -c next")
                 end),
-    awful.key({ }, "F5", function() awful.util.spawn("i3lock -i /home/steven/pictures/wallpapers/png/pixel_landscape-wallpaper-2560x1440.png") end),
-    awful.key({ }, "F7",
+    awful.key({ }, "F9",
                 function()
                     awful.util.spawn("amixer -q sset Master 4%-")
                 end),
-    awful.key({ }, "F8",
+    awful.key({ }, "F10",
                 function()
                     awful.util.spawn("amixer -q sset Master 4%+")
                 end),
+    awful.key({ }, "XF86AudioLowerVolume",
+                function()
+                    awful.util.spawn("amixer -q sset Master 4%-")
+                end),
+    awful.key({ }, "XF86AudioRaiseVolume",
+                function()
+                    awful.util.spawn("amixer -q sset Master 4%+")
+                end),
+    awful.key({ }, "Pause", function() awful.util.spawn("i3lock -i /home/steven/pictures/wallpapers/png/pixel_landscape-wallpaper-2560x1440.png") end),
+
+    awful.key({ }, "Print", function() awful.util.spawn("shutter -a") end),
 
     awful.key({ "Control" }, "j", awful.tag.viewprev ),
     awful.key({ "Control" }, "k", awful.tag.viewnext )
