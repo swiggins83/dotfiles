@@ -22,6 +22,7 @@ git clone git://github.com/mkitt/tabline.vim.git
 git clone https://github.com/Valloric/MatchTagAlways
 git clone https://github.com/gorodinskiy/vim-coloresque
 git clone https://github.com/fatih/vim-go
+git clone https://github.com/terryma/vim-expand-region
 cd -
 
 cp herald.vim ~/.vim/colors/

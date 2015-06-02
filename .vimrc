@@ -30,11 +30,16 @@ nnoremap QQ :qall<CR>
 inoremap jj <ESC><Right>
 inoremap kk <ESC><Right>
 inoremap {{ {<CR>}<ESC>O
+inoremap >> ><ESC><<
 inoremap sout System.out.println();<ESC>hha
 inoremap clog console.log();<ESC>hha
 nmap <leader>n ;set nu!<CR>
 nmap <leader>p ;set paste! <CR> ;set nu! <CR> ;IndentLinesToggle <CR>
 nnoremap <leader>s :/\(<<<<\\|====\\|>>>>\)<CR>
+
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
+
 let g:ctrlp_cmd='CtrlP .'
 
 " return you to last place in file
