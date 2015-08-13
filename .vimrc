@@ -33,9 +33,12 @@ inoremap {{ {<CR>}<ESC>O
 inoremap >> ><ESC><<
 inoremap sout System.out.println();<ESC>hha
 inoremap clog console.log();<ESC>hha
-nmap <leader>n ;set nu!<CR>
-nmap <leader>p ;set paste! <CR> ;set nu! <CR> ;IndentLinesToggle <CR>
+noremap <leader>n ;set nu!<CR>
+noremap <leader>p ;set paste! <CR> ;set nu! <CR> ;IndentLinesToggle <CR>
 nnoremap <leader>s :/\(<<<<\\|====\\|>>>>\)<CR>
+nnoremap <Space><Space> <ESC>
+noremap <S-H> ^
+noremap <S-L> $
 
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
