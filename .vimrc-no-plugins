@@ -1,0 +1,55 @@
+syntax on
+
+set t_Co=256
+colorscheme slate
+
+set cursorline
+set laststatus=2
+set expandtab
+set nu
+set si
+set hlsearch
+set shiftwidth=4
+set tabstop=4
+set mouse=a
+set undofile
+set undodir=~/.vimundo
+
+let mapleader=","
+nnoremap ; :
+nnoremap : ;
+nnoremap zz :call Foldy()<CR>
+nnoremap <leader>; A;<ESC>
+nnoremap q<Tab> :q<CR>
+nnoremap QQ :qall<CR>
+inoremap jj <ESC><Right>
+inoremap kk <ESC><Right>
+inoremap {{ {<CR>}<ESC>O
+inoremap >> ><ESC><<
+inoremap sout System.out.println();<ESC>hha
+inoremap clog console.log();<ESC>hha
+noremap <leader>n :set nu!<CR>
+noremap <leader>p :set paste! <CR> :set nu! <CR>
+nnoremap <leader>s :/\(<<<<\\|====\\|>>>>\)<CR>
+noremap <S-H> ^
+noremap <S-L> $
+
+" return you to last place in file
+au BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \ exe "normal! g`\"" |
+    \ endif
+
+
+" file specifics
+au BufNewFile,BufRead *.py2 set filetype=python
+au BufNewFile,BufRead *.jsp set filetype=html
+au BufNewFile,BufRead *.less set filetype=css
+
+fu! Foldy()
+    if foldclosed('.') == '-1'
+        normal! zfat
+    else
+        normal! za
+    endif
+endfunction
