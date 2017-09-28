@@ -318,10 +318,11 @@ you should place your code here."
   (my-tab-width-setup 2)
 
   (setq helm-ag-use-agignore t)
-  ;; (setq helm-ag-command-option " -Q" )
 
   (setq projectile-enable-caching t)
   (setq projectile-indexing-method 'alien)
+  (setq projectile-switch-project-action 'projectile-find-dir)
+  (setq projectile-find-dir-includes-top-level t)
 
   (setq dired-dwim-target t)
 
@@ -329,8 +330,6 @@ you should place your code here."
   (setq evil-motion-state-modes nil)
 
   (evil-set-initial-state 'term-mode 'normal)
-
-  (global-git-commit-mode t)
 
   (define-key evil-normal-state-map (kbd "--") 'other-window)
 
@@ -341,6 +340,8 @@ you should place your code here."
   (key-chord-define evil-normal-state-map "\'\'" 'delete-window)
 
   (editorconfig-mode t)
+
+  (global-git-commit-mode t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
