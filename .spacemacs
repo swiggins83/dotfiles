@@ -307,6 +307,17 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq python-indent-indent-offset n) ; python yo
   )
 
+;; Truncates all eshell buffers
+(defun my/truncate-eshell-buffers ()
+  (interactive)
+  (save-current-buffer
+    (dolist (buffer (buffer-list t))
+      (set-buffer buffer)
+      (when (eq major-mode 'eshell-mode)
+        (eshell-truncate-buffer))))
+  )
+
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -342,6 +353,9 @@ you should place your code here."
   (editorconfig-mode t)
 
   (global-git-commit-mode t)
+  
+   (setq my/eshell-truncate-timer
+     (run-with-idle-timer 3 t #'my/truncate-eshell-buffers))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
