@@ -325,8 +325,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (require 'helm-bookmark)
+
   (golden-ratio-mode 1)
-  (my-tab-width-setup 2)
 
   (setq helm-ag-use-agignore t)
 
@@ -344,8 +345,12 @@ you should place your code here."
 
   (define-key evil-normal-state-map (kbd "--") 'other-window)
 
+  (define-key evil-normal-state-map (kbd "SPC g c") 'magit-commit)
+  (define-key evil-normal-state-map (kbd "SPC g p") 'magit-push)
+
   (key-chord-mode t)
   (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+  (key-chord-define evil-insert-state-map "kk" 'evil-normal-state)
   (key-chord-define evil-normal-state-map "//" 'spacemacs/shell-pop-eshell)
   (key-chord-define evil-insert-state-map "\'\'" 'delete-window)
   (key-chord-define evil-normal-state-map "\'\'" 'delete-window)
@@ -353,9 +358,9 @@ you should place your code here."
   (editorconfig-mode t)
 
   (global-git-commit-mode t)
-  
-   (setq my/eshell-truncate-timer
-     (run-with-idle-timer 3 t #'my/truncate-eshell-buffers))
+
+  (setq my/eshell-truncate-timer
+    (run-with-idle-timer 3 t #'my/truncate-eshell-buffers))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
