@@ -1,6 +1,6 @@
 cyan=%{$fg[cyan]%}
 blue=%{$fg[blue]%}
-red=%{$fg[red]%}
+red=%{$fg[red]%}                                                                                                     
 green=%{$fg[green]%}
 white=%{$fg[white]%}
 
@@ -10,16 +10,16 @@ ${white}> "
     RPROMPT="${green}%*%f"
 }
 
-source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
-source /home/steven/extras/zsh-git-prompt/zshrc.sh
-
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 unsetopt beep
 bindkey -v
 bindkey -s "\C-w" "cd ..\n"
+
+source /home/ggis/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/ggis/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /home/ggis/extras/zsh-git-prompt/zshrc.sh
 
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -42,6 +42,10 @@ alias vim="vim -p"
 alias du="du -h"
 alias df="df -h"
 
+alias gs="gulp serve"
+alias ge="gulp eslint"
+alias gp="gulp polylint"
+
 alias ga="git add"
 alias gb="git branch"
 alias gc="git commit -v"
@@ -50,9 +54,9 @@ alias gd="git diff"
 alias gdc="git diff --cached"
 alias gcp="git cherry-pick"
 alias gco="git checkout"
-alias gp="git pull"
+alias gpu="git pull"
 alias gl="git log"
-alias gs="git status"
+alias gt="git status"
 alias gh='git log --pretty=format:"%C(auto)%h %ad | %s%d %C(red)[%an]" --graph --date=short'
 
 alias please="sudo"
@@ -62,8 +66,8 @@ export EDITOR=/usr/bin/vim
 # custom funcs
 cd() {
     builtin cd "$@";
-    ls;
+    ls; 
 
     # put directory in xterm title
-    print -Pn "\e]2;%~\a"                                                                                                
+    print -Pn "\e]2;%~\a"
 }
