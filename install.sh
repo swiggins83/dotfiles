@@ -12,6 +12,7 @@ cabal install cabal cabal-install
 echo "Changing shells..."
 chsh -s /bin/zsh
 
+
 echo "Linking files..."
 dotfiles=$(pwd)
 cd ~
@@ -23,10 +24,16 @@ ln -s $dotfiles/.zsh .
 ln -s $dotfiles/.Xresources .
 
 mkdir .vimundo
+
+mkdir -p .emacs.d/.cache/eshell
+cd .emacs.d/.cache/eshell
+ln -s $dotfiles/alias .
+
 mkdir .config/awesome
 cd .config/awesome
 ln -s $dotfiles/rc.lua .
 
+echo "Downloading extras..."
 cd $dotfiles/..
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
 git clone https://github.com/olivierverdier/zsh-git-prompt
