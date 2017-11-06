@@ -2,8 +2,8 @@ echo "Installing the goodness..."
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install -y \
-  zsh awesome awesome-extra vim nodejs npm atom chromium-browser haskell-platform \
-  alsa-utils emacs24 xterm
+  zsh awesome awesome-extra vim vim-gtk nodejs npm atom chromium-browser haskell-platform \
+  alsa-utils emacs xterm
 sudo apt autoremove
 npm install -g yarn
 npm install -g gulp
@@ -17,6 +17,7 @@ dotfiles=$(pwd)
 cd ~
 ln -s $dotfiles/.zshrc .
 ln -s $dotfiles/.vimrc .
+ln -s $dotfiles/.spacemacs .
 ln -s $dotfiles/.vim .
 ln -s $dotfiles/.zsh .
 ln -s $dotfiles/.Xresources .
