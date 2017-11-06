@@ -1,0 +1,37 @@
+alias la ls -la $*
+alias l ls $*
+alias asd cd ..
+
+alias sag sudo apt-get $*
+alias saguu sag update; sag upgrade
+
+alias v vim -p $*
+alias c cd $*
+alias CD cd $*
+alias vim vim -p $*
+alias du du -h $*
+alias df df -h
+
+alias gs gulp serve
+alias ge gulp eslint
+alias gp gulp polylint
+
+alias ni npm i
+alias bi npm run-script bower-install
+alias yy ni && bi
+alias gg yy && gs
+
+alias ga git add $*
+alias gb git branch $*
+alias gc git commit -v
+alias gca git commit --amend $*
+alias gd git diff $*
+alias gdc git diff --cached $*
+alias gcp git cherry-pick $*
+alias gco git checkout $*
+alias gpu git pull $*
+alias gl git log $*
+alias gt git status $*
+alias gh git log --pretty=format:"%C(auto)%h %ad | %s%d %C(red)[%an]" --graph --date=short
+
+alias please sudo $*
