@@ -30,7 +30,9 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(sql
+   '(
+     vimscript
+     lua
      python
      git
      yaml
@@ -260,11 +262,11 @@ values."
    dotspacemacs-folding-method 'origami
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode t
+   dotspacemacs-smartparens-strict-mode nil
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc 
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
+   dotspacemacs-smart-closing-parenthesis nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -298,16 +300,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (setq-default git-magit-status-fullscreen t)
 
-  )
+  (defvar eshell-path-env (getenv "PATH"))
 
-;; Truncates all eshell buffers
-(defun my/truncate-eshell-buffers ()
-  (interactive)
-  (save-current-buffer
-    (dolist (buffer (buffer-list t))
-      (set-buffer buffer)
-      (when (eq major-mode 'eshell-mode)
-        (eshell-truncate-buffer))))
   )
 
 (defun dotspacemacs/user-config ()
@@ -318,6 +312,7 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (require 'helm-bookmark)
+  (require 'em-alias)
 
   (golden-ratio-mode t)
 
@@ -335,12 +330,11 @@ you should place your code here."
 
   (evil-set-initial-state 'term-mode 'normal)
 
-  (setq magit-repository-directories '("/c/project/git/"))
-
   (global-git-commit-mode t)
   (global-git-gutter-mode t)
 
-  (define-key evil-normal-state-map (kbd "SPC g c") 'magit-commit)
+  (define-key evil-normal-state-map (kbd "SPC g c o") 'magit-checkout)
+  (define-key evil-normal-state-map (kbd "SPC g c c") 'magit-commit)
   (define-key evil-normal-state-map (kbd "SPC g d") 'magit-diff-working-tree)
   (define-key evil-normal-state-map (kbd "SPC g p") 'magit-push)
   (define-key evil-normal-state-map (kbd "SPC g h") 'magit-log-buffer-file)
@@ -357,8 +351,7 @@ you should place your code here."
 
   (editorconfig-mode t)
 
-  (setq my/eshell-truncate-timer
-    (run-with-idle-timer 3 t #'my/truncate-eshell-buffers))
+  (smartparens-strict-mode nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
