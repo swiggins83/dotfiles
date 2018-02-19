@@ -1,6 +1,10 @@
+source /home/steven/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/steven/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /home/steven/extras/zsh-git-prompt/zshrc.sh
+
 cyan=%{$fg[cyan]%}
 blue=%{$fg[blue]%}
-red=%{$fg[red]%}                                                                                                     
+red=%{$fg[red]%}
 green=%{$fg[green]%}
 white=%{$fg[white]%}
 
@@ -16,11 +20,6 @@ SAVEHIST=10000
 unsetopt beep
 bindkey -v
 bindkey -s "\C-w" "cd ..\n"
-
-source /home/ggis/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/ggis/extras/zsh-history-substring-search/zsh-history-substring-search.zsh
-source /home/ggis/extras/zsh-git-prompt/zshrc.sh
-
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 
@@ -31,6 +30,7 @@ alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias asd="cd .."
+alias rmrf="rm -rf"
 
 alias sag="sudo apt-get"
 alias saguu="sag update; sag upgrade"
@@ -42,9 +42,19 @@ alias vim="vim -p"
 alias du="du -h"
 alias df="df -h"
 
+alias g="gulp"
 alias gs="gulp serve"
 alias ge="gulp eslint"
 alias gp="gulp polylint"
+
+alias m="mvn"
+alias mi="mvn clean install"
+alias mp="mvn clean package"
+alias mr="mi; cd service; mvn spring-boot:run; cd -"
+alias mt="mvn test"
+alias ni="npm i"
+alias bi="npm run-script bower-install"
+alias gg="ni && bi && gs"
 
 alias ga="git add"
 alias gb="git branch"
@@ -61,13 +71,12 @@ alias gh='git log --pretty=format:"%C(auto)%h %ad | %s%d %C(red)[%an]" --graph -
 
 alias please="sudo"
 
-export EDITOR=/usr/bin/vim
+alias zz="source ~/.zshrc"
 
 # custom funcs
 cd() {
     builtin cd "$@";
-    ls; 
-
-    # put directory in xterm title
-    print -Pn "\e]2;%~\a"
+    ls;
 }
+
+export EDITOR=/usr/bin/vim
