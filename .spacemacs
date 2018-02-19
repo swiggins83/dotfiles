@@ -329,7 +329,7 @@ you should place your code here."
 
   ;; eclim
   (setq eclim-eclipse-dirs "/home/steven/eclipse/"
-        eclim-executable "/home/steven/eclipse/eclim")
+        eclim-executable "/home/steven/eclipse/eclimd")
 
   (setq eclimd-autostart t)
   (defun my-java-mode-hook ()
@@ -363,18 +363,20 @@ you should place your code here."
   (spacemacs/set-leader-keys "dd" 'kill-this-buffer)
 
   (define-key evil-normal-state-map (kbd "SPC g c") nil)
+  (spacemacs/declare-prefix "g c" "checkout / commit")
   (define-key evil-normal-state-map (kbd "SPC g c o") 'magit-checkout)
   (define-key evil-normal-state-map (kbd "SPC g c c") 'magit-commit)
   (define-key evil-normal-state-map (kbd "SPC g d") 'magit-diff-working-tree)
+  (spacemacs/declare-prefix "g p" "push / pull")
   (define-key evil-normal-state-map (kbd "SPC g p p") 'magit-push)
   (define-key evil-normal-state-map (kbd "SPC g p u") 'magit-pull)
-  (define-key evil-normal-state-map (kbd "SPC g h") 'magit-log-buffer-file)
+  (define-key evil-normal-state-map (kbd "SPC g l") 'magit-log-buffer-file)
   (define-key evil-normal-state-map (kbd "SPC g m") 'git-messenger:popup-message)
 
   (define-key evil-normal-state-map (kbd "SPC w w") 'spacemacs/window-manipulation-transient-state/body)
   (define-key evil-normal-state-map (kbd "SPC j j") 'dumb-jump-go-other-window)
   (define-key evil-normal-state-map (kbd "SPC r r") 'replace-string)
-  (define-key evil-normal-state-map (kbd "--") 'other-window)
+  (define-key evil-normal-state-map (kbd "- -") 'other-window)
 
   (define-key dired-mode-map (kbd "/ /") 'dired-open-term)
   (define-key dired-mode-map (kbd "U") 'dired-up-directory)
