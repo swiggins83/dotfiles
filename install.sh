@@ -1,13 +1,12 @@
 echo "Installing the goodness..."
+sudo add-apt-repository ppa:ubuntu-elisp/ppa
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install -y \
-  zsh awesome awesome-extra vim vim-gtk nodejs npm atom chromium-browser haskell-platform \
-  alsa-utils emacs xterm
-sudo apt autoremove
+  zsh awesome awesome-extra vim vim-gtk nodejs npm chromium-browser haskell-platform \
+  alsa-utils emacs emacs-snapshot xterm
 npm install -g yarn
 npm install -g gulp
-cabal install cabal cabal-install
 
 echo "Changing shells..."
 chsh -s /bin/zsh
@@ -25,11 +24,12 @@ ln -s $dotfiles/.Xresources .
 
 mkdir .vimundo
 
+git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 mkdir -p .emacs.d/.cache/eshell
 cd .emacs.d/.cache/eshell
 ln -s $dotfiles/alias .
 
-mkdir .config/awesome
+mkdir -p .config/awesome
 cd .config/awesome
 ln -s $dotfiles/rc.lua .
 
