@@ -39,6 +39,9 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting
 git clone https://github.com/olivierverdier/zsh-git-prompt
 git clone https://github.com/zsh-users/zsh-history-substring-search
 
+# git clone eclim
+# http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/oxygen/R/eclipse-jee-oxygen-R-linux-gtk-x86_64.tar.gz&mirror_id=272
+
 vim
 cd ~/.vim/bundle
 git clone https://github.com/bronson/vim-trailing-whitespace
@@ -52,3 +55,4 @@ git clone https://github.com/terryma/vim-expand-region
 cd $dotfiles
 
 cp herald.vim ~/.vim/colors/
+
