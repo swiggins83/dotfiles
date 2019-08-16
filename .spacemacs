@@ -492,7 +492,7 @@ you should place your code here."
   (setq projectile-globally-ignored-file-suffixes '(".class" ".xd" ".blob" ".lck" ".jks" ".exec" ".min.js"))
   (setq projectile-enable-caching t)
   (setq projectile-indexing-method 'alien)
-  (setq projectile-switch-project-action 'projectile-find-dir)
+  (setq projectile-switch-project-action 'deer)
   (setq projectile-find-dir-includes-top-level t)
 
   ;; dired

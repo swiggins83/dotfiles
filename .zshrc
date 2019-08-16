@@ -1,3 +1,7 @@
+. ~/.path-exports
+. ~/.docker_creds
+. ~/.kube-aliases
+
 source /Users/stevenwiggins/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /Users/stevenwiggins/extras/zsh-git-prompt/zshrc.sh
 source /Users/stevenwiggins/extras/z/z.sh
@@ -156,7 +160,7 @@ cd() {
 }
 
 port() {
-    lsof -nP -i4TCP:"$1" | grep LISTEN
+    lsof -nP -i4TCP:"$1" | grep LISTEN;
 }
 
 ..() {
@@ -164,10 +168,6 @@ port() {
     ls;
 }
 
-
-. ~/.docker_creds
-. ~/.path-exports
-. ~/.kube-aliases
 
 kubelocal
 
