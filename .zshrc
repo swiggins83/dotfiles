@@ -1,5 +1,5 @@
 . ~/.path-exports
-. ~/.docker_creds
+. ~/.docker-creds
 . ~/.kube-aliases
 
 source /Users/stevenwiggins/extras/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -12,6 +12,12 @@ blue=%{$fg[blue]%}
 red=%{$fg[red]%}
 green=%{$fg[green]%}
 white=%{$fg[white]%}
+
+precmd() {
+    PROMPT="${cyan}%n${white}@${blue}%m${red}%~ %{$reset_color%}$(git_super_status)
+${white}> "
+    RPROMPT="${white}%*%f"
+}
 
 # bindkey '^[[A' up-line-or-search
 # bindkey '^[[B' down-line-or-search
@@ -172,9 +178,3 @@ port() {
 kubelocal
 
 pokemonsay
-
-precmd() {
-    PROMPT="${cyan}%n${white}@${blue}%m${red}%~ %{$reset_color%}$(git_super_status)
-${white}> "
-    RPROMPT="${white}%*%f"
-}

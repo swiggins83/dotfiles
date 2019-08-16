@@ -66,7 +66,7 @@ values."
      themes-megapack
      auto-completion
      (shell :variables
-            shell-default-shell 'shell
+            shell-default-shell 'multi-term
             shell-default-position 'bottom)
      ;; org
      ;; spell-checking
@@ -438,12 +438,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; eshell
   (defvar eshell-path-env (getenv "PATH"))
-  ;; (setq “PATH” (concat (getenv “PATH”) “:/usr/local/bin”))
 
   ;; multi-term
   (setq multi-term-program "/usr/local/bin/zsh")
 
   ;; compilation mode
+  (setq shell-file-name "zsh")
+  (setq shell-command-switch "-ic")
   (setq compilation-always-kill t)
   (setq compilation-scroll-output nil)
   (setq compilation-error-regexp-alist
@@ -471,6 +472,9 @@ you should place your code here."
   (require 'evil-matchit)
   (require 'all-the-icons)
 
+  (remove-hook 'comint-output-filter-functions
+               'comint-postoutput-scroll-to-bottom)
+
   ;; etc
   (editorconfig-mode t)
   (global-evil-matchit-mode 1)
@@ -481,19 +485,20 @@ you should place your code here."
   (global-git-commit-mode t)
   (setq magit-repository-directories '("/Users/stevenwiggins/development/"))
 
+  ;; projectile
+  (setq projectile-globally-ignored-file-suffixes '(".class" ".xd" ".blob" ".lck" ".jks" ".exec" ".min.js"))
+  (setq projectile-enable-caching t)
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-find-dir-includes-top-level t)
+  (setq projectile-switch-project-action 'projectile-find-dir)
+  (add-hook 'projectile-find-dir-hook 'deer)
+
   ;; ag
   (setq helm-ag-use-agignore t)
 
   ;; grep
   (setq grep-find-ignored-directories '(".git" "node_modules"))
   (setq grep-find-ignored-files '("*.class" "*.xd" "*.blob" "*.lck" "*.jks" "*.exec" "*.jar" "*.lst" "*.csv" "*.min.js" "*.pyc"))
-
-  ;; projectile
-  (setq projectile-globally-ignored-file-suffixes '(".class" ".xd" ".blob" ".lck" ".jks" ".exec" ".min.js"))
-  (setq projectile-enable-caching t)
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-switch-project-action 'deer)
-  (setq projectile-find-dir-includes-top-level t)
 
   ;; dired
   (with-eval-after-load 'dired
