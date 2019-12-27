@@ -83,19 +83,21 @@ This function should only modify configuration layer settings."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(kubernetes
+   dotspacemacs-additional-packages '(
+                                      beacon
+                                      kubernetes
                                       dired-git-info
                                       evil-collection
                                       sublimity
                                       vmd-mode
-                                      realgud
                                       pycoverage
                                       docker-compose-mode
                                       traad
                                       key-chord
                                       editorconfig
                                       exec-path-from-shell
-                                      diff-hl)
+                                      diff-hl
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -532,10 +534,6 @@ you should place your code here."
   ;; etc
   (beacon-mode 1)
   (editorconfig-mode t)
-  (global-hl-line-mode 1)
-
-  (set-face-background 'hl-line "#3e4446")
-
   (global-evil-matchit-mode 1)
   (golden-ratio-mode t)
   (setq evil-normal-state-modes (append evil-motion-state-modes evil-normal-state-modes))
