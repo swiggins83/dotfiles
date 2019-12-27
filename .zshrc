@@ -89,6 +89,16 @@ alias gt="git status"
 alias gh='git log --pretty=format:"%C(auto)%h %ad | %s%d %C(red)[%an]" --graph --date=short'
 alias gr="git revert"
 
+# Get the most recent versions from Git tags
+# @param {number=10} $1 Number of versions to show
+# @returns {string} Git tag
+alias gvs="git tag --sort=-version:refname | head -${1:-10}"
+
+# Get the most recent version from Git tags
+# @returns {string} Git tag
+alias gv="gvs | head -1"
+
+
 alias top="top -u"
 
 alias ls="gls --color=auto"
