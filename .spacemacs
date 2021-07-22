@@ -32,29 +32,39 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
-     auto-completion
-     shell-scripts
+   '(html
      org
-     sql
-     typescript
-     csharp
      markdown
-     windows-scripts
-     protobuf
      yaml
      javascript
-     ranger
-     emacs-lisp
-     git
-     helm
+     syntax-checking
      (shell :variables
             shell-default-position 'bottom
             shell-default-shell 'shell
-            ;; shell-enable-smart-eshell t
             )
-     syntax-checking
-     treemacs
+     elixir
+     ranger
+     ;; ----------------------------------------------------------------
+     ;; Example of useful layers you may want to use right away.
+     ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
+     ;; `M-m f e R' (Emacs style) to install them.
+     ;; ----------------------------------------------------------------
+     ;; auto-completion
+     ;; better-defaults
+     ;; lsp
+     ;; markdown
+     ;; multiple-cursors
+     ;; org
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
+     ;; spell-checking
+     ;; syntax-checking
+     ;; version-control
+     ;; treemacs
+     emacs-lisp
+     helm
+     git
      )
 
 
@@ -69,7 +79,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(
                                       bash-completion
                                       beacon
-                                      dired-git-info
+                                      git-gutter
                                       key-chord
                                       )
 
@@ -125,7 +135,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
-   dotspacemacs-elpa-timeout 30
+   dotspacemacs-elpa-timeout 5
 
    ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
    ;; This is an advanced option and should not be changed unless you suspect
@@ -181,7 +191,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'random
+   dotspacemacs-startup-banner 'official
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -198,6 +208,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -235,7 +251,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme 'all-the-icons
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -363,7 +379,7 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 70
+   dotspacemacs-inactive-transparency 90
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -380,6 +396,10 @@ It should only modify the values of Spacemacs settings."
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
+
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
 
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
@@ -405,9 +425,14 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
@@ -437,7 +462,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg", "grep")
 
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'
@@ -455,6 +480,9 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%I@%S"
 
@@ -479,6 +507,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
 
+   ;; Accept SPC as y for prompts if non nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
+
    ;; If non-nil shift your number row to match the entered keyboard layout
    ;; (only in insert state). Currently supported keyboard layouts are:
    ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
@@ -488,12 +519,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
-   dotspacemacs-zone-out-when-idle 600
+   dotspacemacs-zone-out-when-idle nil
 
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs t
+   dotspacemacs-pretty-docs nil
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
@@ -515,19 +546,15 @@ See the header of this file for more information."
 This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
+If you are unsure, try setting them in `dotspacemacs/user-config' first.")
 
-  ;; magit
-  (setq-default git-magit-status-fullscreen t)
-
-  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
+
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -536,51 +563,37 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (require 'em-alias)
   (require 'bash-completion)
+
+  (set-background-color "#331823")
 
   ;; etc
   (beacon-mode 1)
   (golden-ratio-mode 1)
+  (global-git-gutter-mode +1)
+
+  ;; elixir
+  (add-to-list 'auto-mode-alist '("\\.html.eex\\'" . html-mode))
 
   ;; js
   (setq js-indent-level 2)
 
-  ;; csproj
-  (add-to-list 'auto-mode-alist '("\\.csproj\\'" . xml-mode))
-
-  ;; compilation
-  (setq compilation-always-kill t)
-  (setq comint-scroll-show-maximum-output nil)
-  (add-hook 'comint-mode-hook
-            (function
-             (lambda ()
-               (toggle-truncate-lines 1)
-               (make-local-variable 'jit-lock-defer-timer)
-               (set (make-local-variable 'jit-lock-defer-time) 0.25)
-               )
-             )
-            )
+  ;; ranger
+  (setq ranger-override-dired t)
+  (setq ranger-cleanup-eagerly t)
+  (setq ranger-show-hidden t)
 
   ;; shell
   (bash-completion-setup)
   (prefer-coding-system 'utf-8)
-  (setq explicit-shell-file-name
-        "C:/Program Files/Git/bin/bash")
+  (setq explicit-shell-file-name "C:/Program Files/Git/bin/bash")
+
   (setq shell-file-name explicit-shell-file-name)
   (add-to-list 'exec-path explicit-shell-file-name)
   (defun git-bash () (interactive)
          (call-interactively 'shell))
 
-  ;; ranger
-  (add-hook 'ranger-mode-hook
-            (lambda () (dired-git-info-mode)))
-  (setq ranger-override-dired t)
-  (setq ranger-cleanup-eagerly t)
-  (setq ranger-show-hidden t)
-
   ;; projectile
-  (setq projectile-git-submodule-command nil)
   (setq projectile-globally-ignored-file-suffixes '(".class" ".xd" ".blob" ".lck" ".jks" ".exec" ".min.js"))
   (setq projectile-enable-caching t)
   (setq projectile-indexing-method 'alien)
@@ -588,12 +601,15 @@ before packages are loaded."
   (setq projectile-switch-project-action 'projectile-find-dir)
   (add-hook 'projectile-find-dir-hook 'deer)
 
-  (setq find-program "C:\\cygwin\\bin\\find.exe")
-
   ;; helm up/down
   (with-eval-after-load 'helm
     (define-key helm-map (kbd "C-d") 'helm-next-page)
     (define-key helm-map (kbd "C-u") 'helm-previous-page))
+
+  ;; shell
+  (define-key evil-normal-state-map (kbd "SPC '") 'git-bash)
+
+  ;; (setq find-program "C:\\cygwin\\bin\\find.exe")
 
   ;; key chord (one key after another)
   (setq key-chord-one-key-delay 0.6)
@@ -608,18 +624,6 @@ before packages are loaded."
 
   ;; deer
   (define-key evil-normal-state-map (kbd "SPC a d") 'deer)
-
-  ;; org
-  ;; (defun open-note ()
-  ;;   (interactive)
-  ;;   (set 'filePath "c:\users\steven.wiggins\development\notes\test")
-  ;;   (with-temp-buffer (write-file filePath)))
-
-  ;; shell
-  (define-key evil-normal-state-map (kbd "SPC '") 'git-bash)
-
-  ;; notes
-  (define-key evil-normal-state-map (kbd "SPC a n") 'open-note)
 
   ;; dumb jump
   (define-key evil-normal-state-map (kbd "SPC j j") 'dumb-jump-go)
@@ -642,8 +646,7 @@ before packages are loaded."
 
   ;; etc
   (define-key evil-normal-state-map (kbd "SPC r r") 'replace-string)
-
-  )
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -659,7 +662,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   '(yasnippet-snippets helm-company helm-c-yasnippet fuzzy auto-yasnippet ac-ispell sqlup-mode sql-indent web-mode typescript-mode emmet-mode vmd-mode valign mmm-mode markdown-toc gh-md emoji-cheat-sheet-plus company-emoji powershell protobuf-mode yaml-mode web-beautify tern prettier-js npm-mode nodejs-repl livid-mode skewer-mode js2-refactor yasnippet multiple-cursors js2-mode js-doc import-js grizzl impatient-mode htmlize simple-httpd helm-gtags ggtags dap-mode lsp-treemacs bui lsp-mode markdown-mode counsel-gtags counsel swiper ivy company add-node-modules-path xterm-color ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org terminal-here symon symbol-overlay string-inflection string-edit spaceline-all-the-icons smeargle shell-pop restart-emacs ranger rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-term multi-line move-text magit-svn magit-section magit-gitflow macrostep lorem-ipsum link-hint key-chord indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-ag google-translate golden-ratio gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link font-lock+ flycheck-pos-tip flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr elisp-slime-nav editorconfig dumb-jump dotenv-mode dired-quick-sort dired-git-info diminish devdocs define-word column-enforce-mode color-theme-sanityinc-tomorrow clean-aindent-mode centered-cursor-mode beacon auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
+   '(web-mode tagedit slim-mode scss-mode sass-mode pug-mode impatient-mode helm-css-scss haml-mode emmet-mode counsel-css company-web web-completion-data add-node-modules-path ob-elixir helm-gtags ggtags flycheck-credo dap-mode lsp-treemacs bui lsp-mode markdown-mode counsel-gtags counsel swiper ivy alchemist company elixir-mode ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection string-edit spaceline-all-the-icons smeargle restart-emacs ranger rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint key-chord indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-ag google-translate golden-ratio gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish define-word column-enforce-mode color-theme-sanityinc-tomorrow clean-aindent-mode centered-cursor-mode beacon auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
