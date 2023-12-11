@@ -27,15 +27,19 @@ This function should only modify configuration layer settings."
    dotspacemacs-ask-for-lazy-installation t
 
    ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
+   ;; Paths must have a trailing slash (i.e. "~/.mycontribs/")
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(rust
+   '(
+     spacemacs-misc
+     typescript
+     rust
      csv
      react
      html
+     phoenix
      elixir
      auto-completion
      shell-scripts
@@ -45,14 +49,19 @@ This function should only modify configuration layer settings."
      protobuf
      yaml
      javascript
-     ranger
+     (ranger :variables
+             ranger-override-dired 'deer
+             ranger-cleanup-eagerly t
+             ranger-show-hidden t
+             ranger-modify-header nil
+             )
      emacs-lisp
      git
      command-log
      helm
      (shell :variables
             shell-default-position 'bottom
-            shell-default-shell 'ansi-term
+            shell-default-shell 'multi-term
             )
      syntax-checking
      treemacs
@@ -68,6 +77,10 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
+                                      ripgrep
+                                      sqlite3
+                                      editorconfig
+                                      zone-rainbow
                                       ctrlf
                                       emojify
                                       bash-completion
@@ -76,6 +89,10 @@ This function should only modify configuration layer settings."
                                       exec-path-from-shell
                                       key-chord
                                       prettier-js
+                                      (copilot :location (recipe
+                                                          :fetcher github
+                                                          :repo "zerolfx/copilot.el"
+                                                          :files ("*.el" "dist")))
                                       )
 
    ;; A list of packages that cannot be updated.
@@ -191,6 +208,13 @@ It should only modify the values of Spacemacs settings."
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 'random
+
+   ;; Scale factor controls the scaling (size) of the startup banner. Default
+   ;; value is `auto' for scaling the logo automatically to fit all buffer
+   ;; contents, to a maximum of the full image height and a minimum of 3 line
+   ;; heights. If set to a number (int or float) it is used as a constant
+   ;; scaling factor for the default logo size.
+   dotspacemacs-startup-banner-scale 'auto
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -367,12 +391,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
-   ;; (default nil) (Emacs 24.4+ only)
+   ;; (default t) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup t
 
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
-   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
-   ;; borderless fullscreen. (default nil)
+   ;; variable with `dotspacemacs-maximized-at-startup' to obtain fullscreen
+   ;; without external boxes. Also disables the internal border. (default nil)
    dotspacemacs-undecorated-at-startup nil
 
    ;; A value from the range (0..100), in increasing opacity, which describes
@@ -384,6 +408,11 @@ It should only modify the values of Spacemacs settings."
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 70
+
+   ;; A value from the range (0..100), in increasing opacity, which describes the
+   ;; transparency level of a frame background when it's active or selected. Transparency
+   ;; can be toggled through `toggle-background-transparency'. (default 90)
+   dotspacemacs-background-transparency 90
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -401,12 +430,16 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
    ;; numbers are relative. If set to `visual', line numbers are also relative,
-   ;; but lines are only visual lines are counted. For example, folded lines
-   ;; will not be counted and wrapped lines are counted as multiple lines.
+   ;; but only visual lines are counted. For example, folded lines will not be
+   ;; counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
    ;;   :visual nil
@@ -425,18 +458,19 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
 
    ;; If non-nil smartparens-mode will be enabled in programming modes.
    ;; (default t)
-   dotspacemacs-activate-smartparens-mode t
+   dotspacemacs-activate-smartparens-mode nil
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
+   dotspacemacs-smart-closing-parenthesis nil
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
@@ -489,7 +523,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
 
-   ;; Show trailing whitespace (default t)
+   ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
+   ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
+   ;; (default t)
    dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
@@ -561,6 +597,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq web-mode-code-indent-offset 2)
   (setq css-indent-offset 2)
 
+  (add-to-list 'image-types 'svg)
+
   ;; emoji
   (add-hook 'after-init-hook #'global-emojify-mode)
   )
@@ -580,7 +618,6 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (require 'em-alias)
   (require 'bash-completion)
   (require 'prettier-js)
 
@@ -588,6 +625,27 @@ before packages are loaded."
   (ffap-bindings)
   (beacon-mode 1)
   (golden-ratio-mode 1)
+  (setq dumb-jump-force-searcher 'rg)
+
+  ;; copilot
+  (with-eval-after-load 'company
+    ;; disable inline previews
+    (delq 'company-preview-if-just-one-frontend company-frontends))
+
+  (with-eval-after-load 'copilot
+    (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
+    (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
+    (setq copilot-node-executable "/Users/steven/.asdf/shims/node")
+    ;; (setq copilot-idle-delay 3)
+    (setq copilot-max-char -1)
+  )
+
+  (add-hook 'prog-mode-hook 'copilot-mode)
+
+  ;; spaceline
+  ;; (spaceline-toggle-all-the-icons-buffer-id-off)
 
   ;; prettier
   (add-hook 'js2-mode-hook 'prettier-js-mode)
@@ -597,6 +655,7 @@ before packages are loaded."
                                 '("\\.html.heex?\\'" . prettier-js-mode))))
 
   ;; elixir
+  (add-hook 'elixir-mode-hook flycheck-mode)
   (add-hook 'elixir-mode-hook
             (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
   (add-hook 'elixir-format-hook (lambda ()
@@ -618,6 +677,18 @@ before packages are loaded."
 
   ;; csproj
   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . xml-mode))
+  ;; ranger
+  ;; (add-hook 'ranger-mode-hook
+  ;;           (lambda () (dired-git-info-mode)))
+
+  ;; projectile
+  (setq projectile-git-submodule-command nil)
+  (setq projectile-globally-ignored-file-suffixes '(".class" ".xd" ".blob" ".lck" ".jks" ".exec" ".min.js"))
+  (setq projectile-globally-ignored-directories '("node_modules"))
+  (setq projectile-enable-caching t)
+  (setq projectile-find-dir-includes-top-level t)
+  (setq projectile-switch-project-action 'projectile-find-dir)
+  (add-hook 'projectile-find-dir-hook 'deer)
 
   ;; compilation
   (setq compilation-skip-threshold 2)
@@ -629,39 +700,28 @@ before packages are loaded."
   (setq shell-file-name "zsh")
   (setq shell-command-switch "-ic")
   (setq compilation-always-kill t)
-  (setq comint-scroll-show-maximum-output nil)
+  ;; (setq comint-scroll-show-maximum-output nil)
   (add-hook 'comint-mode-hook
             (function
              (lambda ()
-               (toggle-truncate-lines 1)
                (make-local-variable 'jit-lock-defer-timer)
                (set (make-local-variable 'jit-lock-defer-time) 0.25)
                )
              )
             )
 
+  (defun my-compilation-mode-hook ()
+    (setq truncate-string-ellipsis nil)
+    (setq truncate-lines nil) ;; automatically becomes buffer local
+    (set (make-local-variable 'truncate-partial-width-windows) nil))
+  (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
+
   ;; shell
   (bash-completion-setup)
   (prefer-coding-system 'utf-8)
 
-  ;; ranger
-  (add-hook 'ranger-mode-hook
-            (lambda () (dired-git-info-mode)))
-  (setq ranger-override-dired t)
-  (setq ranger-cleanup-eagerly t)
-  (setq ranger-show-hidden t)
-
-  ;; projectile
-  (setq projectile-git-submodule-command nil)
-  (setq projectile-globally-ignored-file-suffixes '(".class" ".xd" ".blob" ".lck" ".jks" ".exec" ".min.js"))
-  (setq projectile-enable-caching t)
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-find-dir-includes-top-level t)
-  (setq projectile-switch-project-action 'projectile-find-dir)
-  (add-hook 'projectile-find-dir-hook 'deer)
-
   ;; key chord (one key after another)
-  (setq key-chord-one-key-delay 0.6)
+  (setq key-chord-one-key-delay 0.4)
   (key-chord-mode t)
 
   ;; the One True Exit Command
@@ -700,7 +760,7 @@ before packages are loaded."
   ;; org
   ;; (defun open-note ()
   ;;   (interactive)
-  ;;   (set 'filePath "c:\users\steven.wiggins\development\notes\test")
+  ;;   (set 'filePath "/users/steven/development/notes/test")
   ;;   (with-temp-buffer (write-file filePath)))
 
   ;; shell
@@ -747,9 +807,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   '(csv-mode toml-mode ron-mode racer rust-mode flycheck-rust cargo tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode counsel-css company-web web-completion-data ob-elixir flycheck-credo alchemist elixir-mode yasnippet-snippets helm-company helm-c-yasnippet fuzzy auto-yasnippet ac-ispell sqlup-mode sql-indent web-mode typescript-mode emmet-mode vmd-mode valign mmm-mode markdown-toc gh-md emoji-cheat-sheet-plus company-emoji powershell protobuf-mode yaml-mode web-beautify tern prettier-js npm-mode nodejs-repl livid-mode skewer-mode js2-refactor yasnippet multiple-cursors js2-mode js-doc import-js grizzl impatient-mode htmlize simple-httpd helm-gtags ggtags dap-mode lsp-treemacs bui lsp-mode markdown-mode counsel-gtags counsel swiper ivy company add-node-modules-path xterm-color ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toc-org terminal-here symon symbol-overlay string-inflection spaceline-all-the-icons smeargle shell-pop restart-emacs ranger rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-term multi-line move-text magit-svn magit-section magit-gitflow macrostep lorem-ipsum link-hint key-chord indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-ag google-translate golden-ratio gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link font-lock+ flycheck-pos-tip flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr elisp-slime-nav editorconfig dumb-jump dotenv-mode dired-quick-sort dired-git-info diminish devdocs define-word column-enforce-mode color-theme-sanityinc-tomorrow clean-aindent-mode centered-cursor-mode beacon auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
+   '(copilot tern tide zone-rainbow yasnippet-snippets yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree typescript-mode treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toml-mode toc-org terminal-here term-cursor tagedit symon symbol-overlay string-inflection string-edit-at-point sqlite3 sql-indent spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shfmt shell-pop scss-mode sass-mode ron-mode rjsx-mode restart-emacs request ranger rainbow-delimiters racer quickrun pug-mode protobuf-mode prettier-js powershell popwin pcre2el password-generator paradox overseer org-superstar open-junk-file ob-elixir npm-mode nodejs-repl nameless multi-vterm multi-term multi-line mmm-mode markdown-toc macrostep lorem-ipsum livid-mode link-hint keycast key-chord json-reformat json-navigator json-mode js2-refactor js-doc inspector insert-shebang info+ indent-guide impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitignore-templates git-timemachine git-modes git-messenger git-link gh-md fuzzy forge flycheck-rust flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flycheck-bashate flx-ido fish-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emojify emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort dired-git-info diminish devdocs define-word ctrlf csv-mode company-web company-shell command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow clean-aindent-mode centered-cursor-mode cargo bmx-mode beacon bash-completion auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
