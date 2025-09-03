@@ -33,14 +33,15 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     tern
+     python
      spacemacs-misc
-     typescript
      rust
      csv
+     typescript
      react
      html
      phoenix
-     elixir
      auto-completion
      shell-scripts
      sql
@@ -64,7 +65,7 @@ This function should only modify configuration layer settings."
             shell-default-shell 'multi-term
             )
      syntax-checking
-     treemacs
+     github-copilot
      )
 
 
@@ -77,9 +78,11 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
+                                      elixir-ts-mode
                                       ripgrep
                                       sqlite3
                                       editorconfig
+                                      jsonrpc
                                       zone-rainbow
                                       ctrlf
                                       emojify
@@ -89,10 +92,6 @@ This function should only modify configuration layer settings."
                                       exec-path-from-shell
                                       key-chord
                                       prettier-js
-                                      (copilot :location (recipe
-                                                          :fetcher github
-                                                          :repo "zerolfx/copilot.el"
-                                                          :files ("*.el" "dist")))
                                       )
 
    ;; A list of packages that cannot be updated.
@@ -575,7 +574,7 @@ default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
   (spacemacs/load-spacemacs-env)
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -608,7 +607,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -622,10 +621,20 @@ before packages are loaded."
   (require 'prettier-js)
 
   ;; etc
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+
   (ffap-bindings)
   (beacon-mode 1)
   (golden-ratio-mode 1)
   (setq dumb-jump-force-searcher 'rg)
+
+  ;; claude code ide
+  (use-package claude-code-ide
+    :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+    :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+    :config
+    (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
 
   ;; copilot
   (with-eval-after-load 'company
@@ -655,15 +664,15 @@ before packages are loaded."
                                 '("\\.html.heex?\\'" . prettier-js-mode))))
 
   ;; elixir
-  (add-hook 'elixir-mode-hook flycheck-mode)
-  (add-hook 'elixir-mode-hook
-            (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
-  (add-hook 'elixir-format-hook (lambda ()
-                                  (if (projectile-project-p)
-                                      (setq elixir-format-arguments
-                                            (list "--dot-formatter"
-                                                  (concat (locate-dominating-file buffer-file-name ".formatter.exs") ".formatter.exs")))
-                                    (setq elixir-format-arguments nil))))
+  ;; (add-hook 'elixir-mode-hook flycheck-mode)
+  ;; (add-hook 'elixir-mode-hook
+  ;;           (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+  ;; (add-hook 'elixir-format-hook (lambda ()
+  ;;                                 (if (projectile-project-p)
+  ;;                                     (setq elixir-format-arguments
+  ;;                                           (list "--dot-formatter"
+  ;;                                                 (concat (locate-dominating-file buffer-file-name ".formatter.exs") ".formatter.exs")))
+  ;;                                   (setq elixir-format-arguments nil))))
 
   ;; web mode
   (defun my-web-mode-hook ()
@@ -674,9 +683,8 @@ before packages are loaded."
   (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.heex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.leex\\'" . web-mode))
-
-  ;; csproj
   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . xml-mode))
+
   ;; ranger
   ;; (add-hook 'ranger-mode-hook
   ;;           (lambda () (dired-git-info-mode)))
@@ -692,13 +700,8 @@ before packages are loaded."
 
   ;; compilation
   (setq compilation-skip-threshold 2)
-  (setq bash-completion-nospace t)
   (setq compilation-scroll-output t)
-
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize))
-  (setq shell-file-name "zsh")
-  (setq shell-command-switch "-ic")
+  (setq compilation-max-output-line-length nil)
   (setq compilation-always-kill t)
   ;; (setq comint-scroll-show-maximum-output nil)
   (add-hook 'comint-mode-hook
@@ -710,15 +713,17 @@ before packages are loaded."
              )
             )
 
-  (defun my-compilation-mode-hook ()
-    (setq truncate-string-ellipsis nil)
-    (setq truncate-lines nil) ;; automatically becomes buffer local
-    (set (make-local-variable 'truncate-partial-width-windows) nil))
-  (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
+  ;; (defun my-compilation-mode-hook ()
+  ;;   (setq truncate-string-ellipsis nil)
+  ;;   (setq truncate-lines nil) ;; automatically becomes buffer local
+  ;;   (set (make-local-variable 'truncate-partial-width-windows) nil))
+  ;; (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
 
   ;; shell
   (bash-completion-setup)
   (prefer-coding-system 'utf-8)
+  (setq shell-file-name "zsh")
+  (setq shell-command-switch "-ic")
 
   ;; key chord (one key after another)
   (setq key-chord-one-key-delay 0.4)
@@ -726,13 +731,6 @@ before packages are loaded."
 
   ;; the One True Exit Command
   (key-chord-define evil-insert-state-map (kbd "jj") 'evil-normal-state)
-
-  ;; compilation
-  ;; (define-key compilation-mode-map (kbd "f") 'first-error)
-  (define-key compilation-mode-map (kbd "n") 'compilation-next-error)
-  (define-key compilation-mode-map (kbd "p") 'compilation-previous-error)
-  (define-key compilation-mode-map (kbd "C-f") 'evil-goto-last-line)
-  (define-key compilation-mode-map (kbd "C-t") 'evil-scroll-line-to-top)
 
   ;; deleting buffers
   (spacemacs/declare-prefix "d" "delete stuff")
@@ -763,31 +761,12 @@ before packages are loaded."
   ;;   (set 'filePath "/users/steven/development/notes/test")
   ;;   (with-temp-buffer (write-file filePath)))
 
-  ;; shell
-  ;; (define-key evil-normal-state-map (kbd "SPC '") 'git-bash)
-
   ;; notes
-  (define-key evil-normal-state-map (kbd "SPC a n") 'open-note)
+  ;; (define-key evil-normal-state-map (kbd "SPC a n") 'open-note)
 
   ;; dumb jump
   (define-key evil-normal-state-map (kbd "SPC j j") 'dumb-jump-go)
   (define-key evil-normal-state-map (kbd "SPC j k") 'dumb-jump-back)
-
-  ;; magit
-  (spacemacs/declare-prefix "g c" "checkout / commit")
-  (define-key evil-normal-state-map (kbd "SPC g c") nil)
-  (define-key evil-normal-state-map (kbd "SPC g c o") 'magit-checkout)
-  (define-key evil-normal-state-map (kbd "SPC g c b") 'magit-branch-and-checkout)
-  (define-key evil-normal-state-map (kbd "SPC g c c") 'magit-commit)
-  (define-key evil-normal-state-map (kbd "SPC g c l") 'magit-clone)
-  (define-key evil-normal-state-map (kbd "SPC g d") 'magit-diff-working-tree)
-  (spacemacs/declare-prefix "g p" "push / pull")
-  (define-key evil-normal-state-map (kbd "SPC g p") nil)
-  (define-key evil-normal-state-map (kbd "SPC g p p") 'magit-push)
-  (define-key evil-normal-state-map (kbd "SPC g p u") 'magit-pull)
-  (define-key evil-normal-state-map (kbd "SPC g p o m") 'magit-pull-from-upstream)
-  (spacemacs/declare-prefix "g L" "log")
-  (define-key evil-normal-state-map (kbd "SPC g L") 'magit-log-buffer-file)
 
   ;; etc
   (define-key evil-normal-state-map (kbd "SPC r r") 'replace-string)
@@ -802,17 +781,67 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(copilot tern tide zone-rainbow yasnippet-snippets yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree typescript-mode treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toml-mode toc-org terminal-here term-cursor tagedit symon symbol-overlay string-inflection string-edit-at-point sqlite3 sql-indent spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc smeargle slim-mode shfmt shell-pop scss-mode sass-mode ron-mode rjsx-mode restart-emacs request ranger rainbow-delimiters racer quickrun pug-mode protobuf-mode prettier-js powershell popwin pcre2el password-generator paradox overseer org-superstar open-junk-file ob-elixir npm-mode nodejs-repl nameless multi-vterm multi-term multi-line mmm-mode markdown-toc macrostep lorem-ipsum livid-mode link-hint keycast key-chord json-reformat json-navigator json-mode js2-refactor js-doc inspector insert-shebang info+ indent-guide impatient-mode hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-git-grep helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitignore-templates git-timemachine git-modes git-messenger git-link gh-md fuzzy forge flycheck-rust flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flycheck-bashate flx-ido fish-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emojify emmet-mode elisp-slime-nav elisp-def editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort dired-git-info diminish devdocs define-word ctrlf csv-mode company-web company-shell command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow clean-aindent-mode centered-cursor-mode cargo bmx-mode beacon bash-completion auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     '(ac-ispell ace-jump-helm-line ace-link aggressive-indent alchemist
+                 anaconda-mode auto-compile auto-highlight-symbol auto-yasnippet
+                 bash-completion beacon blacken bmx-mode cargo
+                 centered-cursor-mode claude-code claude-code-ide
+                 clean-aindent-mode code-cells color-theme-sanityinc-tomorrow
+                 column-enforce-mode command-log-mode company-anaconda
+                 company-shell company-web concurrent copilot counsel
+                 counsel-gtags csv-mode ctable ctrlf cython-mode define-word
+                 devdocs diminish dired-git-info dired-quick-sort dotenv-mode
+                 drag-stuff dumb-jump editorconfig elisp-def elisp-slime-nav
+                 emmet-mode emojify emr epc esh-help eshell-prompt-extras eshell-z
+                 eval-sexp-fu evil-anzu evil-args evil-cleverparens
+                 evil-collection evil-easymotion evil-escape evil-evilified-state
+                 evil-exchange evil-goggles evil-iedit-state evil-indent-plus
+                 evil-lion evil-lisp-state evil-matchit evil-nerd-commenter
+                 evil-numbers evil-surround evil-textobj-line evil-tutor
+                 evil-unimpaired evil-visual-mark-mode evil-visualstar
+                 exec-path-from-shell expand-region eyebrowse fancy-battery
+                 fish-mode flx-ido flycheck-bashate flycheck-credo flycheck-elsa
+                 flycheck-package flycheck-pos-tip flycheck-rust forge fuzzy
+                 ggtags gh-md git-link git-messenger git-modes git-timemachine
+                 gitignore-templates golden-ratio google-translate helm-ag
+                 helm-c-yasnippet helm-company helm-cscope helm-css-scss
+                 helm-descbinds helm-git-grep helm-ls-git helm-make
+                 helm-mode-manager helm-org helm-projectile helm-purpose
+                 helm-pydoc helm-swoop helm-themes helm-xref help-fns+ hide-comnt
+                 highlight-indentation highlight-numbers highlight-parentheses
+                 hl-todo holy-mode hungry-delete hybrid-mode impatient-mode
+                 importmagic indent-guide info+ insert-shebang inspector ivy
+                 js-doc js2-refactor json-mode json-navigator json-reformat
+                 key-chord keycast link-hint live-py-mode livid-mode load-env-vars
+                 lorem-ipsum lsp-mode macrostep markdown-toc mmm-mode multi-line
+                 multi-term multi-vterm nameless nodejs-repl nose npm-mode
+                 ob-elixir open-junk-file org-superstar overseer paradox
+                 password-generator pcre2el pip-requirements pipenv pippel poetry
+                 popwin powershell prettier-js protobuf-mode pug-mode py-isort
+                 pydoc pyenv-mode pylookup pytest pythonic pyvenv quickrun racer
+                 rainbow-delimiters ranger request restart-emacs rjsx-mode
+                 ron-mode sass-mode scss-mode shell-pop shfmt slim-mode smeargle
+                 space-doc spaceline-all-the-icons spacemacs-purpose-popwin
+                 spacemacs-whitespace-cleanup sphinx-doc sql-indent sqlite3
+                 string-edit-at-point string-inflection swiper symbol-overlay
+                 symon tagedit term-cursor terminal-here tern tide toc-org
+                 toml-mode treemacs-evil treemacs-icons-dired treemacs-magit
+                 treemacs-persp treemacs-projectile typescript-mode undo-tree
+                 use-package uuidgen vi-tilde-fringe vim-powerline web-beautify
+                 web-mode which-key winum writeroom-mode ws-butler xcscope
+                 xterm-color yaml-mode yapfify yasnippet-snippets zone-rainbow))
+   '(package-vc-selected-packages
+     '((claude-code-ide :url "https://github.com/manzaltu/claude-code-ide.el")
+       (claude-code :url "https://github.com/stevemolitor/claude-code.el"))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
